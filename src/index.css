@@ -1,0 +1,957 @@
+/* =================================
+   FALAK GLOBAL
+================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+
+  padding: 0;
+
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    sans-serif;
+
+  background: #050816;
+
+  color: white;
+}
+
+/* =================================
+   APP BACKGROUND
+================================= */
+
+.falak-app {
+  min-height: 100vh;
+
+  position: relative;
+
+  overflow-x: hidden;
+
+  background:
+    radial-gradient(circle at top, rgba(255, 209, 102, 0.12), transparent 35%),
+    linear-gradient(180deg, #050816, #08152b);
+}
+
+.stars {
+  position: absolute;
+
+  inset: 0;
+
+  background-image: radial-gradient(white 1px, transparent 1px);
+
+  background-size: 55px 55px;
+
+  opacity: 0.18;
+
+  pointer-events: none;
+}
+
+/* =================================
+   MAIN CONTAINER
+================================= */
+
+.falak-content {
+  position: relative;
+
+  max-width: 1200px;
+
+  margin: auto;
+
+  padding: 40px 30px;
+}
+
+.dashboard-layout {
+  width: 100%;
+}
+
+/* =================================
+   HERO
+================================= */
+
+.falak-hero {
+  width: 850px;
+
+  max-width: 100%;
+
+  margin: 0 auto 40px;
+
+  padding: 35px;
+
+  text-align: center;
+
+  border-radius: 28px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.14),
+    rgba(255, 255, 255, 0.05)
+  );
+
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+  backdrop-filter: blur(15px);
+}
+
+.falak-hero h1 {
+  margin: 0;
+
+  font-size: 52px;
+
+  color: #ffd166;
+}
+
+.subtitle {
+  opacity: 0.7;
+
+  margin-bottom: 25px;
+}
+
+.hero-location {
+  font-size: 25px;
+
+  font-weight: 600;
+}
+
+.hero-date {
+  margin-top: 15px;
+}
+
+.hero-hijri {
+  margin-top: 15px;
+
+  color: #ffd166;
+
+  font-size: 20px;
+}
+
+.hero-moon {
+  margin-top: 20px;
+
+  font-size: 22px;
+}
+
+/* =================================
+   LOCATION
+================================= */
+
+.location-section {
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 15px;
+
+  margin: 30px 0;
+}
+
+select,
+button {
+  background: rgba(255, 255, 255, 0.1);
+
+  color: white;
+
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  padding: 12px 18px;
+
+  border-radius: 14px;
+}
+
+button:hover {
+  background: #ffd166;
+
+  color: #111;
+}
+.progress {
+  height: 8px;
+
+  background: rgba(255, 255, 255, 0.15);
+
+  border-radius: 20px;
+
+  overflow: hidden;
+
+  margin: 25px 0;
+}
+
+.progress-fill {
+  height: 100%;
+
+  background: #ffd166;
+
+  border-radius: 20px;
+}
+/* =========================
+   LOCATION SELECT FIX
+========================= */
+
+.location-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.location-select {
+  position: relative;
+}
+
+.location-select::after {
+  content: "⌄";
+
+  position: absolute;
+
+  right: 18px;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  color: #ffd166;
+
+  font-size: 18px;
+
+  pointer-events: none;
+}
+.location-select {
+  position: relative;
+}
+
+.location-select select {
+  width: 250px;
+
+  height: 44px;
+
+  padding: 0 40px 0 18px;
+
+  border-radius: 14px;
+
+  background: #2b2f3a;
+
+  color: white;
+
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  font-size: 16px;
+
+  appearance: none;
+
+  cursor: pointer;
+}
+
+.location-select::after {
+  content: "⌄";
+
+  position: absolute;
+
+  right: 16px;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  color: #ffd166;
+
+  pointer-events: none;
+}
+/* =================================
+   NEXT PRAYER
+================================= */
+
+.next-section {
+  display: flex;
+
+  justify-content: center;
+
+  margin: 40px 0;
+}
+
+.next-prayer-card {
+  width: 700px;
+
+  max-width: 90%;
+
+  padding: 35px;
+
+  text-align: center;
+
+  border-radius: 28px;
+
+  background: rgba(255, 255, 255, 0.08);
+
+  border: 1px solid rgba(255, 255, 255, 0.15);
+
+  backdrop-filter: blur(12px);
+}
+
+.next-name {
+  font-size: 38px;
+
+  font-weight: 800;
+
+  color: #ffd166;
+
+  margin: 20px 0;
+}
+
+.next-time {
+  font-size: 28px;
+}
+
+.progress {
+  height: 10px;
+
+  background: rgba(255, 255, 255, 0.15);
+
+  border-radius: 20px;
+
+  overflow: hidden;
+
+  margin: 25px 0;
+}
+
+.progress-fill {
+  height: 100%;
+
+  background: #ffd166;
+
+  transition: 0.5s;
+}
+.next-prayer-card h2 {
+  font-size: 28px;
+
+  margin-bottom: 25px;
+}
+
+.next-name {
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 15px;
+
+  font-size: 42px;
+}
+.countdown {
+  font-size: 48px;
+
+  font-weight: 800;
+
+  letter-spacing: 3px;
+}
+.next-time {
+  font-size: 28px;
+}
+
+.countdown {
+  margin-top: 20px;
+
+  font-size: 42px;
+
+  font-weight: 700;
+
+  letter-spacing: 3px;
+}
+
+.remaining {
+  opacity: 0.7;
+}
+
+/* =================================
+   PRAYERS
+================================= */
+
+.city-title {
+  font-size: 30px;
+
+  margin: 30px 0;
+}
+
+.section-title {
+  font-size: 28px;
+}
+
+.prayers-grid {
+  display: grid;
+
+  grid-template-columns: repeat(5, 1fr);
+
+  gap: 18px;
+}
+
+.prayer-mini-card {
+  padding: 22px;
+
+  border-radius: 20px;
+
+  background: rgba(255, 255, 255, 0.08);
+
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.prayer-mini-card strong {
+  display: block;
+
+  margin-top: 10px;
+
+  font-size: 28px;
+
+  color: #ffd166;
+}
+
+/* =================================
+   INFO GRID
+================================= */
+
+.info-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 25px;
+
+  margin-top: 40px;
+}
+
+.info-grid > * {
+  min-height: 420px;
+
+  padding: 25px;
+
+  border-radius: 25px;
+
+  background: rgba(255, 255, 255, 0.08);
+
+  border: 1px solid rgba(255, 255, 255, 0.15);
+
+  backdrop-filter: blur(12px);
+}
+
+/* =================================
+   MOON
+================================= */
+
+.moon-card {
+  text-align: center;
+}
+
+.moon-real {
+  width: 160px;
+
+  height: 160px;
+
+  margin: 25px auto;
+
+  border-radius: 50%;
+
+  background: #f8e7a0;
+
+  box-shadow: 0 0 45px rgba(255, 220, 120, 0.5);
+}
+
+.moon-craters {
+  width: 100%;
+
+  height: 100%;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle at 30% 35%,
+      rgba(0, 0, 0, 0.15) 0 8%,
+      transparent 9%
+    ),
+    radial-gradient(
+      circle at 65% 55%,
+      rgba(0, 0, 0, 0.12) 0 10%,
+      transparent 11%
+    );
+}
+
+.moon-row {
+  display: flex;
+
+  justify-content: space-between;
+
+  padding: 15px;
+
+  margin-top: 12px;
+
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.moon-row strong {
+  color: #ffd166;
+}
+
+/* =================================
+   CRESCENT
+================================= */
+
+.crescent-icon {
+  font-size: 70px;
+
+  text-align: center;
+}
+
+.crescent-status {
+  text-align: center;
+
+  font-size: 32px;
+
+  font-weight: 800;
+
+  color: #ffd166;
+}
+
+.crescent-confidence {
+  text-align: center;
+}
+
+.crescent-grid {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 12px;
+
+  margin-top: 25px;
+}
+
+.crescent-item {
+  padding: 15px;
+
+  border-radius: 15px;
+
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.crescent-item strong {
+  display: block;
+
+  margin-top: 8px;
+
+  color: #ffd166;
+}
+
+/* =========================
+   QIBLA FINAL
+========================= */
+
+.qibla-card {
+  text-align: center;
+}
+
+.compass {
+  width: 190px;
+
+  height: 190px;
+
+  margin: 25px auto;
+
+  border: 3px solid #ffd166;
+
+  border-radius: 50%;
+
+  position: relative;
+}
+
+.direction {
+  position: absolute;
+
+  font-size: 20px;
+
+  font-weight: 700;
+}
+
+.north {
+  top: 10px;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+}
+
+.south {
+  bottom: 10px;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+}
+
+.east {
+  right: 15px;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+}
+
+.west {
+  left: 15px;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+}
+
+.kaaba-center {
+  position: absolute;
+
+  top: 50%;
+
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  font-size: 34px;
+
+  z-index: 2;
+}
+
+.qibla-arrow {
+  position: absolute;
+
+  left: 50%;
+
+  top: 50%;
+
+  width: 0;
+
+  height: 85px;
+
+  transform-origin: center bottom;
+
+  margin-left: -2px;
+
+  margin-top: -85px;
+
+  color: #ffd166;
+
+  font-size: 50px;
+
+  font-weight: bold;
+
+  z-index: 3;
+
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: center;
+}
+
+.qibla-arrow span {
+  display: block;
+
+  text-shadow: 0 0 10px rgba(255, 209, 102, 0.5);
+}
+
+.qibla-degree {
+  font-size: 42px;
+
+  font-weight: 800;
+
+  color: #ffd166;
+}
+
+.qibla-direction {
+  font-size: 22px;
+
+  font-weight: 600;
+
+  margin-top: 5px;
+}
+
+.qibla-label {
+  opacity: 0.8;
+
+  font-size: 18px;
+}
+
+.qibla-distance {
+  margin-top: 25px;
+
+  font-size: 18px;
+}
+
+.qibla-distance strong {
+  display: block;
+
+  margin-top: 10px;
+
+  font-size: 30px;
+
+  color: #ffd166;
+}
+
+/* =================================
+   RESPONSIVE
+================================= */
+
+@media (max-width: 900px) {
+  .prayers-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .location-section {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 500px) {
+  .falak-content {
+    padding: 20px 15px;
+  }
+
+  .prayers-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .falak-hero h1 {
+    font-size: 38px;
+  }
+  .falak-app {
+    min-height: 100vh;
+
+    position: relative;
+  }
+  .falak-bg {
+    position: fixed;
+
+    inset: 0;
+
+    background-image:
+      linear-gradient(rgba(5, 8, 22, 0.55), rgba(5, 8, 22, 0.85)),
+      url("/aqsa.png");
+
+    background-size: cover;
+
+    background-position: center;
+
+    background-repeat: no-repeat;
+
+    z-index: 0;
+  }
+  .falak-bg-image {
+    position: fixed;
+
+    inset: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    z-index: 0;
+
+    opacity: 0.5;
+  }
+
+  .falak-content {
+    position: relative;
+
+    z-index: 2;
+  }
+  .falak-app {
+    min-height: 100vh;
+
+    position: relative;
+  }
+
+  .falak-content {
+    position: relative;
+
+    z-index: 2;
+  }
+
+  .falak-content {
+    position: relative;
+
+    z-index: 1;
+  }
+
+  .falak-content {
+    position: relative;
+
+    z-index: 1;
+  }
+
+  .stars {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: -1;
+  }
+
+  .stars {
+    z-index: -1;
+  }
+  .countdown {
+    font-size: 32px;
+  }
+}
+.falak-bg-image {
+  position: fixed;
+
+  inset: 0;
+
+  width: 100%;
+
+  height: 100vh;
+
+  object-fit: cover;
+
+  object-position: center;
+
+  z-index: 0;
+
+  opacity: 0.45;
+}
+
+.falak-app {
+  position: relative;
+
+  min-height: 100vh;
+}
+
+.stars {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 1;
+}
+
+.falak-content {
+  position: relative;
+
+  z-index: 2;
+}
+.falak-bg-image {
+  animation: skyMove 40s ease-in-out infinite alternate;
+}
+
+@keyframes skyMove {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(1.05);
+  }
+}
+/* =====================================
+   LANGUAGE SWITCH
+===================================== */
+
+.falak-toolbar {
+  position: fixed;
+
+  top: 22px;
+  right: 24px;
+
+  z-index: 20;
+}
+
+.language-button {
+  min-width: 120px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  padding: 0 16px;
+
+  border: 1px solid rgba(255, 209, 102, 0.35);
+  border-radius: 14px;
+
+  background: rgba(5, 8, 22, 0.65);
+
+  color: #ffd166;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.language-button:hover {
+  background: rgba(255, 209, 102, 0.15);
+
+  border-color: #ffd166;
+
+  color: #ffd166;
+
+  transform: translateY(-2px);
+}
+
+/* Arabic mode */
+
+html[dir="rtl"] .falak-toolbar {
+  right: auto;
+  left: 24px;
+}
+
+@media (max-width: 600px) {
+  .falak-toolbar {
+    top: 12px;
+    right: 12px;
+  }
+
+  html[dir="rtl"] .falak-toolbar {
+    right: auto;
+    left: 12px;
+  }
+
+  .language-button {
+    min-width: 105px;
+    height: 40px;
+    font-size: 14px;
+  }
+}
+html[dir="rtl"] body {
+  font-family: Tahoma, Arial, sans-serif;
+}
+
+html[dir="rtl"] .falak-content {
+  direction: rtl;
+}
+
+html[dir="ltr"] .falak-content {
+  direction: ltr;
+}
