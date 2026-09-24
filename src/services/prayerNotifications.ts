@@ -1,3 +1,5 @@
+import { loadNotificationSettings } from "./notificationSettings";
+
 export type PrayerNotificationKey =
   | "fajr"
   | "dhuhr"
@@ -29,7 +31,15 @@ const prayerNamesEn: Record<PrayerNotificationKey, string> = {
   isha: "Isha",
 };
 
-const scheduledTimers = new Map<PrayerNotificationKey, number>();
+/*
+ * Active Falak notification timers.
+ *
+ * Possible timers:
+ * - notification before prayer
+ * - notification at prayer time
+ * - new Hijri day notification
+ */
+const scheduledTimers = new Map<string, number>();
 
 export function clearPrayerNotifications() {
   for (const timer of scheduledTimers.values()) {
@@ -39,14 +49,61 @@ export function clearPrayerNotifications() {
   scheduledTimers.clear();
 }
 
-function showPrayerNotification(
-  prayer: PrayerNotificationKey,
-  language: string,
-) {
+/*
+ * Display a Falak notification.
+ *
+ * Production:
+ * Prefer Falak's registered Service Worker.
+ *
+ * Development:
+ * Fall back to the Notification API when
+ * the PWA Service Worker is not registered.
+ */
+async function showFalakNotification(title: string, body: string, tag: string) {
   if (!("Notification" in window) || Notification.permission !== "granted") {
     return;
   }
 
+  try {
+    if ("serviceWorker" in navigator) {
+      const registration = await navigator.serviceWorker.getRegistration();
+
+      if (registration) {
+        await registration.showNotification(title, {
+          body,
+          icon: "/falak-192.png",
+          badge: "/falak-192.png",
+          tag,
+        });
+
+        return;
+      }
+    }
+
+    /*
+     * Development fallback.
+     *
+     * vite-plugin-pwa is currently disabled
+     * in npm run dev, so there may be no
+     * Service Worker registration.
+     */
+    new Notification(title, {
+      body,
+      icon: "/falak-192.png",
+      tag,
+    });
+  } catch (error) {
+    console.error("Unable to show Falak notification:", error);
+  }
+}
+
+/*
+ * Notification exactly at prayer time.
+ */
+async function showPrayerNotification(
+  prayer: PrayerNotificationKey,
+  language: string,
+) {
   const prayerName =
     language === "ar" ? prayerNamesAr[prayer] : prayerNamesEn[prayer];
 
@@ -60,27 +117,99 @@ function showPrayerNotification(
       ? "تقبل الله طاعتكم 🌙"
       : "May your prayer be accepted 🌙";
 
-  try {
-    new Notification(title, {
-      body,
-      tag: `falak-prayer-${prayer}`,
-    });
-  } catch (error) {
-    console.error("Unable to show prayer notification:", error);
-  }
+  await showFalakNotification(title, body, `falak-prayer-${prayer}`);
 }
 
+/*
+ * Notification before prayer.
+ */
+async function showBeforePrayerNotification(
+  prayer: PrayerNotificationKey,
+  minutes: number,
+  language: string,
+) {
+  const prayerName =
+    language === "ar" ? prayerNamesAr[prayer] : prayerNamesEn[prayer];
+
+  const title =
+    language === "ar"
+      ? `اقترب موعد صلاة ${prayerName} 🕌`
+      : `${prayerName} prayer is approaching 🕌`;
+
+  const body =
+    language === "ar"
+      ? `متبقي ${minutes} ${
+          minutes === 15 || minutes === 30 ? "دقيقة" : "دقائق"
+        } على الصلاة.`
+      : `${minutes} minutes until prayer time.`;
+
+  await showFalakNotification(title, body, `falak-before-${prayer}`);
+}
+
+/*
+ * Falak Hijri day changes at local sunset.
+ */
+async function showHijriDayNotification(language: string) {
+  const title =
+    language === "ar" ? "بدأ يوم هجري جديد 🌙" : "A new Hijri day has begun 🌙";
+
+  const body =
+    language === "ar"
+      ? "مع غروب الشمس يبدأ اليوم الهجري الجديد في فلك."
+      : "With sunset, a new Hijri day begins in Falak.";
+
+  await showFalakNotification(title, body, "falak-new-hijri-day");
+}
+
+/*
+ * Schedule one future notification.
+ */
+function scheduleTimer(key: string, targetTime: number, callback: () => void) {
+  const delay = targetTime - Date.now();
+
+  /*
+   * Never send notifications for an event
+   * that has already passed.
+   */
+  if (delay <= 0) {
+    return;
+  }
+
+  const timer = window.setTimeout(() => {
+    callback();
+
+    scheduledTimers.delete(key);
+  }, delay);
+
+  scheduledTimers.set(key, timer);
+}
+
+/*
+ * Schedule Falak notifications for
+ * today's remaining prayers.
+ */
 export function schedulePrayerNotifications(
   prayers: PrayerNotificationTimes,
   language: string,
 ) {
+  /*
+   * Remove timers created using previous
+   * location/settings/prayer calculations.
+   */
   clearPrayerNotifications();
 
   if (!("Notification" in window) || Notification.permission !== "granted") {
     return;
   }
 
-  const now = Date.now();
+  const settings = loadNotificationSettings();
+
+  /*
+   * Falak master switch.
+   */
+  if (!settings.enabled) {
+    return;
+  }
 
   const prayerEntries: Array<[PrayerNotificationKey, Date | null]> = [
     ["fajr", prayers.fajr],
@@ -95,83 +224,51 @@ export function schedulePrayerNotifications(
       continue;
     }
 
-    const delay = time.getTime() - now;
-
     /*
-     * Skip prayers that have already passed.
+     * Respect individual prayer settings.
      */
-    if (delay <= 0) {
+    if (!settings.prayers[prayer]) {
       continue;
     }
 
+    const prayerTime = time.getTime();
+
     /*
-     * setTimeout has a practical maximum
-     * around 2^31 - 1 milliseconds.
-     *
-     * Today's prayer times are safely
-     * inside that range.
+     * Optional early reminder.
      */
-    const timer = window.setTimeout(() => {
-      showPrayerNotification(prayer, language);
+    if (settings.beforeMinutes > 0) {
+      const beforeTime = prayerTime - settings.beforeMinutes * 60 * 1000;
 
-      scheduledTimers.delete(prayer);
-    }, delay);
-
-    scheduledTimers.set(prayer, timer);
-  }
-}
-export async function testPrayerNotification(language: string) {
-  if (!("Notification" in window)) {
-    console.warn("Notifications are not supported.");
-    return;
-  }
-
-  if (Notification.permission !== "granted") {
-    console.warn("Notification permission is not granted.");
-    return;
-  }
-
-  console.log("🔔 Falak test notification scheduled in 10 seconds.");
-
-  window.setTimeout(async () => {
-    const title =
-      language === "ar"
-        ? "اختبار إشعارات فلك 🔔"
-        : "Falak Notification Test 🔔";
-
-    const body =
-      language === "ar"
-        ? "الإشعارات تعمل بنجاح 🌙"
-        : "Notifications are working successfully 🌙";
-
-    try {
-      if ("serviceWorker" in navigator) {
-        const registration = await navigator.serviceWorker.ready;
-
-        await registration.showNotification(title, {
-          body,
-
-          icon: "/falak-192.png",
-
-          badge: "/falak-192.png",
-
-          tag: "falak-notification-test",
-        });
-
-        console.log("✅ Falak notification sent through Service Worker.");
-
-        return;
-      }
-
-      new Notification(title, {
-        body,
-        icon: "/falak-192.png",
-        tag: "falak-notification-test",
+      scheduleTimer(`before-${prayer}`, beforeTime, () => {
+        void showBeforePrayerNotification(
+          prayer,
+          settings.beforeMinutes,
+          language,
+        );
       });
-
-      console.log("✅ Falak notification sent through Notification API.");
-    } catch (error) {
-      console.error("❌ Falak notification failed:", error);
     }
-  }, 10_000);
+
+    /*
+     * Prayer-time notification.
+     */
+    scheduleTimer(`prayer-${prayer}`, prayerTime, () => {
+      void showPrayerNotification(prayer, language);
+    });
+  }
+
+  /*
+   * New Hijri day notification.
+   *
+   * Independent from the Maghrib prayer
+   * notification switch.
+   */
+  if (
+    settings.hijriDayNotification &&
+    prayers.maghrib instanceof Date &&
+    !Number.isNaN(prayers.maghrib.getTime())
+  ) {
+    scheduleTimer("hijri-day", prayers.maghrib.getTime(), () => {
+      void showHijriDayNotification(language);
+    });
+  }
 }

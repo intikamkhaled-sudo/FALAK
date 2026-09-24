@@ -1,10 +1,13 @@
 import { useMemo, useState, useEffect } from "react";
+
 import {
   schedulePrayerNotifications,
   clearPrayerNotifications,
 } from "../services/prayerNotifications";
+
 import { getFalakReport } from "../services/falakEngine";
 import { cities } from "../data/cities";
+
 import FalakLayout from "../components/FalakLayout";
 import LocationSelector from "../components/LocationSelector";
 import GeoLocationButton from "../components/GeoLocationButton";
@@ -69,6 +72,13 @@ export default function Dashboard() {
     elevation: city.elevation ?? 0,
     date: now,
   });
+
+  /*
+   * Schedule Falak prayer notifications.
+   *
+   * The scheduler reads the notification
+   * preferences saved by the user.
+   */
   useEffect(() => {
     schedulePrayerNotifications(report.prayers, language);
 
@@ -83,20 +93,37 @@ export default function Dashboard() {
     report.prayers.isha,
     language,
   ]);
+
+  /*
+   * Immediately re-schedule whenever:
+   *
+   * - Notification permission is granted.
+   * - Falak notification settings change.
+   */
   useEffect(() => {
-    function handlePermissionChange() {
+    function rescheduleNotifications() {
       schedulePrayerNotifications(report.prayers, language);
     }
 
     window.addEventListener(
       "falak-notification-permission",
-      handlePermissionChange,
+      rescheduleNotifications,
+    );
+
+    window.addEventListener(
+      "falak-notification-settings-change",
+      rescheduleNotifications,
     );
 
     return () => {
       window.removeEventListener(
         "falak-notification-permission",
-        handlePermissionChange,
+        rescheduleNotifications,
+      );
+
+      window.removeEventListener(
+        "falak-notification-settings-change",
+        rescheduleNotifications,
       );
     };
   }, [
@@ -107,6 +134,11 @@ export default function Dashboard() {
     report.prayers.isha,
     language,
   ]);
+
+  /*
+   * Determine the next prayer for the
+   * Qur'anic reflection card.
+   */
   const nextPrayerName = useMemo<PrayerVerseKey>(() => {
     const prayers: PrayerCandidate[] = [
       {

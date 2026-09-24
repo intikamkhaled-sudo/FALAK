@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { testPrayerNotification } from "../services/prayerNotifications";
-import { useLanguage } from "../context/LanguageContext";
 
+import { useLanguage } from "../context/LanguageContext";
+import NotificationSettings from "./NotificationSettings";
 type NotificationState = "unsupported" | "default" | "granted" | "denied";
 
 export default function NotificationButton() {
   const { language } = useLanguage();
 
   const [status, setStatus] = useState<NotificationState>("default");
-
+  const [settingsOpen, setSettingsOpen] = useState(false);
   useEffect(() => {
     if (!("Notification" in window)) {
       setStatus("unsupported");
@@ -24,7 +24,7 @@ export default function NotificationButton() {
     }
 
     if (Notification.permission === "granted") {
-      testPrayerNotification(language);
+      setSettingsOpen(true);
       return;
     }
 
@@ -36,9 +36,13 @@ export default function NotificationButton() {
       const permission = await Notification.requestPermission();
 
       setStatus(permission);
+      if (permission === "granted") {
+        window.dispatchEvent(new Event("falak-notification-permission"));
+
+        setSettingsOpen(true);
+      }
       window.dispatchEvent(new Event("falak-notification-permission"));
       if (permission === "granted") {
-        testPrayerNotification(language);
       }
     } catch (error) {
       console.error("Unable to request notification permission:", error);
@@ -72,21 +76,28 @@ export default function NotificationButton() {
   }
 
   return (
-    <button
-      type="button"
-      className={`notification-button ${
-        enabled ? "notification-button-active" : ""
-      }`}
-      onClick={handleClick}
-      disabled={status === "unsupported" || status === "denied"}
-      title={getTitle()}
-      aria-label={getTitle()}
-    >
-      <span className="notification-bell-icon" aria-hidden="true">
-        {enabled ? "🔔" : "🔕"}
-      </span>
+    <>
+      <button
+        type="button"
+        className={`notification-button ${
+          enabled ? "notification-button-active" : ""
+        }`}
+        onClick={handleClick}
+        disabled={status === "unsupported" || status === "denied"}
+        title={getTitle()}
+        aria-label={getTitle()}
+      >
+        <span className="notification-bell-icon" aria-hidden="true">
+          {enabled ? "🔔" : "🔕"}
+        </span>
 
-      {enabled && <span className="notification-status-dot" />}
-    </button>
+        {enabled && <span className="notification-status-dot" />}
+      </button>
+
+      <NotificationSettings
+        open={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+      />
+    </>
   );
 }
