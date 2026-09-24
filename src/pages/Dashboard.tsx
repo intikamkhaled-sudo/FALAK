@@ -1,8 +1,10 @@
-import { useMemo, useState } from "react";
-
+import { useMemo, useState, useEffect } from "react";
+import {
+  schedulePrayerNotifications,
+  clearPrayerNotifications,
+} from "../services/prayerNotifications";
 import { getFalakReport } from "../services/falakEngine";
 import { cities } from "../data/cities";
-
 import FalakLayout from "../components/FalakLayout";
 import LocationSelector from "../components/LocationSelector";
 import GeoLocationButton from "../components/GeoLocationButton";
@@ -37,7 +39,7 @@ interface PrayerCandidate {
 }
 
 export default function Dashboard() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const [city, setCity] = useState<DashboardCity>(() => {
     const savedCity = localStorage.getItem("falak-city");
@@ -67,7 +69,44 @@ export default function Dashboard() {
     elevation: city.elevation ?? 0,
     date: now,
   });
+  useEffect(() => {
+    schedulePrayerNotifications(report.prayers, language);
 
+    return () => {
+      clearPrayerNotifications();
+    };
+  }, [
+    report.prayers.fajr,
+    report.prayers.dhuhr,
+    report.prayers.asr,
+    report.prayers.maghrib,
+    report.prayers.isha,
+    language,
+  ]);
+  useEffect(() => {
+    function handlePermissionChange() {
+      schedulePrayerNotifications(report.prayers, language);
+    }
+
+    window.addEventListener(
+      "falak-notification-permission",
+      handlePermissionChange,
+    );
+
+    return () => {
+      window.removeEventListener(
+        "falak-notification-permission",
+        handlePermissionChange,
+      );
+    };
+  }, [
+    report.prayers.fajr,
+    report.prayers.dhuhr,
+    report.prayers.asr,
+    report.prayers.maghrib,
+    report.prayers.isha,
+    language,
+  ]);
   const nextPrayerName = useMemo<PrayerVerseKey>(() => {
     const prayers: PrayerCandidate[] = [
       {

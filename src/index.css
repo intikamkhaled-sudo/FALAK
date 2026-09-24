@@ -1436,3 +1436,97 @@ html[dir="ltr"] .falak-content {
     font-size: 10px;
   }
 }
+/* =========================
+   Notification Button
+   ========================= */
+
+.notification-button {
+  position: relative;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 42px;
+  height: 42px;
+
+  padding: 0;
+
+  border: 1px solid rgba(255, 209, 102, 0.16);
+  border-radius: 12px;
+
+  background: rgba(12, 19, 35, 0.72);
+
+  color: rgba(255, 255, 255, 0.72);
+
+  cursor: pointer;
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.notification-button:hover {
+  color: #ffd166;
+
+  border-color: rgba(255, 209, 102, 0.38);
+
+  background: rgba(255, 209, 102, 0.07);
+
+  transform: translateY(-1px);
+}
+
+.notification-button-active {
+  color: #ffd166;
+
+  border-color: rgba(255, 209, 102, 0.3);
+
+  background: rgba(255, 209, 102, 0.08);
+}
+
+.notification-button:disabled {
+  opacity: 0.42;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+.notification-status-dot {
+  position: absolute;
+
+  top: 7px;
+  right: 7px;
+
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: #ffd166;
+
+  box-shadow: 0 0 8px rgba(255, 209, 102, 0.75);
+}
+
+/* Keep toolbar buttons aligned */
+
+.falak-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.notification-bell-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 18px;
+  line-height: 1;
+
+  user-select: none;
+}

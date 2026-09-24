@@ -26,44 +26,29 @@ const HIJRI_MONTHS = [
 ];
 
 const DAY_MS = 24 * 60 * 60 * 1000;
-
-const HOUR_MS = 60 * 60 * 1000;
+const MINUTE_MS = 60 * 1000;
 
 /*
  * Falak lunation anchor.
  *
- * Astronomical New Moon associated
- * with Muharram 1 AH.
+ * Used only to map the astronomical
+ * lunation sequence to Hijri month/year.
  *
- * Historical first-crescent visibility
- * followed this conjunction.
+ * The actual beginning of each month
+ * is determined locally by Falak's
+ * crescent-visibility engine.
  */
 const HIJRI_EPOCH_CONJUNCTION = new Date(Date.UTC(622, 6, 14, 5, 27, 0, 0));
 
 /*
- * This is metadata only.
+ * Convert astronomical lunation index
+ * into Hijri month/year.
  *
- * Month boundaries themselves are
- * determined astronomically by Falak.
- */
-
-/*
- * Convert a lunation index into
- * Hijri month/year.
- *
- * index 0:
- * Muharram 1 AH
- *
- * index 1:
- * Safar 1 AH
- *
+ * index 0  -> Muharram 1 AH
+ * index 1  -> Safar 1 AH
  * ...
- *
- * index 11:
- * Dhu al-Hijjah 1 AH
- *
- * index 12:
- * Muharram 2 AH
+ * index 11 -> Dhu al-Hijjah 1 AH
+ * index 12 -> Muharram 2 AH
  */
 function lunationIndexToHijri(lunationIndex: number): {
   month: number;
@@ -80,33 +65,21 @@ function lunationIndexToHijri(lunationIndex: number): {
 }
 
 /*
- * Count astronomical New Moons from
- * the Hijri epoch conjunction to the
- * conjunction associated with the
+ * Determine the lunation number associated
+ * with the conjunction that produced the
  * current Falak lunar month.
  *
- * We do NOT estimate this by dividing
- * milliseconds by 29.53 days.
+ * Mean synodic month is used only to obtain
+ * an initial index estimate.
  *
- * Instead Astronomy Engine searches
- * the actual conjunction sequence.
+ * Astronomy Engine is then used to align
+ * that estimate with the real conjunction.
  */
 function getLunationIndex(targetConjunction: Date): number {
-  /*
-   * Modern Falak dates are after
-   * the Hijri epoch.
-   */
   if (targetConjunction.getTime() < HIJRI_EPOCH_CONJUNCTION.getTime()) {
     throw new Error("Falak Hijri dates before 1 AH are not supported.");
   }
 
-  /*
-   * A direct month estimate gets us
-   * very close to the correct index.
-   *
-   * The final alignment is checked
-   * astronomically below.
-   */
   const meanSynodicMonth = 29.530588853 * DAY_MS;
 
   let index = Math.round(
@@ -114,13 +87,6 @@ function getLunationIndex(targetConjunction: Date): number {
       meanSynodicMonth,
   );
 
-  /*
-   * Reconstruct the conjunction near
-   * the estimated lunation.
-   *
-   * Start a few days before its
-   * estimated location.
-   */
   const estimatedTime = new Date(
     HIJRI_EPOCH_CONJUNCTION.getTime() + index * meanSynodicMonth,
   );
@@ -133,11 +99,6 @@ function getLunationIndex(targetConjunction: Date): number {
     return index;
   }
 
-  /*
-   * Correct the estimate if floating
-   * mean-month arithmetic placed us
-   * one lunation away.
-   */
   const difference = targetConjunction.getTime() - event.date.getTime();
 
   if (difference > 15 * DAY_MS) {
@@ -150,41 +111,23 @@ function getLunationIndex(targetConjunction: Date): number {
 }
 
 /*
- * Find the most recent sunset
- * at or before the requested instant.
- */
-function findPreviousSunset(date: Date, observer: Observer): Date | null {
-  let cursor = new Date(date.getTime() - 36 * HOUR_MS);
-
-  let latest: Date | null = null;
-
-  for (let attempt = 0; attempt < 4; attempt += 1) {
-    const event = SearchRiseSet(Body.Sun, observer, -1, MakeTime(cursor), 2);
-
-    if (!event) {
-      break;
-    }
-
-    if (event.date.getTime() > date.getTime()) {
-      break;
-    }
-
-    latest = event.date;
-
-    cursor = new Date(event.date.getTime() + 60 * 1000);
-  }
-
-  return latest;
-}
-
-/*
- * Find the astronomical lunar month
- * containing the requested instant.
+ * Find the Falak lunar month containing
+ * the requested instant.
  *
- * If conjunction has happened but
- * first accepted crescent visibility
- * has not happened yet, we still
- * belong to the preceding Hijri month.
+ * Important:
+ *
+ * A conjunction by itself does NOT start
+ * the new Hijri month.
+ *
+ * The month starts only after the first
+ * crescent evening accepted by Falak's
+ * visibility policy.
+ *
+ * Therefore, if the next conjunction has
+ * already happened but its crescent has
+ * not yet produced a month start, the
+ * requested instant still belongs to the
+ * previous lunar month.
  */
 function findCurrentLunarMonth(
   date: Date,
@@ -215,32 +158,109 @@ function findCurrentLunarMonth(
 }
 
 /*
- * Hijri day changes at sunset.
+ * Count actual local sunsets.
+ *
+ * This is intentionally NOT calculated
+ * using elapsedMilliseconds / 24 hours.
+ *
+ * The interval between two local sunsets
+ * is not guaranteed to be exactly 24h.
+ *
+ * Hijri day 1 begins at monthStart.
+ *
+ * Each following local sunset advances
+ * the Hijri day by exactly one.
+ */
+function countSunsetsSinceMonthStart(
+  monthStart: Date,
+  date: Date,
+  observer: Observer,
+): number {
+  if (date.getTime() <= monthStart.getTime()) {
+    return 0;
+  }
+
+  /*
+   * Move slightly after monthStart so
+   * the sunset that STARTED day 1 is
+   * not counted again.
+   */
+  let cursor = new Date(monthStart.getTime() + MINUTE_MS);
+
+  let sunsetCount = 0;
+
+  /*
+   * A Hijri month cannot realistically
+   * require anywhere near this many
+   * iterations.
+   *
+   * The guard prevents accidental
+   * infinite searches in pathological
+   * astronomical conditions.
+   */
+  for (let attempt = 0; attempt < 35; attempt += 1) {
+    const sunset = SearchRiseSet(Body.Sun, observer, -1, MakeTime(cursor), 2);
+
+    if (!sunset) {
+      break;
+    }
+
+    if (sunset.date.getTime() > date.getTime()) {
+      break;
+    }
+
+    sunsetCount += 1;
+
+    /*
+     * Continue after the sunset that
+     * was just counted.
+     */
+    cursor = new Date(sunset.date.getTime() + MINUTE_MS);
+  }
+
+  return sunsetCount;
+}
+
+/*
+ * Hijri days change at LOCAL SUNSET.
+ *
+ * monthStart itself = beginning of day 1
+ *
+ * next local sunset = day 2
+ *
+ * next local sunset = day 3
+ *
+ * etc.
  */
 function calculateHijriDay(
   date: Date,
   monthStart: Date,
   observer: Observer,
 ): number {
-  if (date.getTime() <= monthStart.getTime()) {
-    return 1;
-  }
+  const sunsetsPassed = countSunsetsSinceMonthStart(monthStart, date, observer);
 
-  const previousSunset = findPreviousSunset(date, observer);
-
-  if (!previousSunset) {
-    const elapsed = date.getTime() - monthStart.getTime();
-
-    return Math.max(1, Math.round(elapsed / DAY_MS) + 1);
-  }
-
-  const elapsed = previousSunset.getTime() - monthStart.getTime();
-
-  const sunsetIntervals = Math.round(elapsed / DAY_MS);
-
-  return Math.max(1, sunsetIntervals + 1);
+  return sunsetsPassed + 1;
 }
 
+/*
+ * Public Falak Hijri conversion.
+ *
+ * The result depends on:
+ *
+ * - requested instant
+ * - latitude
+ * - longitude
+ * - elevation
+ * - local crescent visibility
+ * - local sunset sequence
+ *
+ * It does NOT use:
+ *
+ * - Intl Islamic calendar
+ * - Umm al-Qura
+ * - fixed country offsets
+ * - midnight as Hijri day boundary
+ */
 export function gregorianToHijri(
   date: Date,
   latitude: number,
@@ -263,17 +283,18 @@ export function gregorianToHijri(
   }
 
   /*
-   * Day number comes entirely from
-   * Falak's sunset/month-start engine.
+   * Hijri DAY:
+   *
+   * Determined from actual local
+   * sunsets after month start.
    */
   const day = calculateHijriDay(date, lunarMonth.monthStart, observer);
 
   /*
-   * Month/year now come from the
-   * astronomical lunation sequence.
+   * Hijri MONTH/YEAR:
    *
-   * No Intl Islamic calendar.
-   * No Umm al-Qura.
+   * Determined from the astronomical
+   * lunation sequence.
    */
   const lunationIndex = getLunationIndex(lunarMonth.conjunction);
 
@@ -281,11 +302,8 @@ export function gregorianToHijri(
 
   return {
     day,
-
     month,
-
     year,
-
     monthName: HIJRI_MONTHS[month - 1],
   };
 }
