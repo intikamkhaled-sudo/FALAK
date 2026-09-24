@@ -33,7 +33,6 @@ export default defineConfig({
         orientation: "portrait-primary",
 
         start_url: "/",
-
         scope: "/",
 
         icons: [
@@ -58,6 +57,8 @@ export default defineConfig({
 
       workbox: {
         cleanupOutdatedCaches: true,
+
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
 
         globPatterns: ["**/*.{js,css,html,png,svg,ico,woff2}"],
       },
