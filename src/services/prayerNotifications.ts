@@ -120,7 +120,7 @@ export function schedulePrayerNotifications(
     scheduledTimers.set(prayer, timer);
   }
 }
-export function testPrayerNotification(language: string) {
+export async function testPrayerNotification(language: string) {
   if (!("Notification" in window)) {
     console.warn("Notifications are not supported.");
     return;
@@ -133,7 +133,7 @@ export function testPrayerNotification(language: string) {
 
   console.log("🔔 Falak test notification scheduled in 10 seconds.");
 
-  window.setTimeout(() => {
+  window.setTimeout(async () => {
     const title =
       language === "ar"
         ? "اختبار إشعارات فلك 🔔"
@@ -144,9 +144,34 @@ export function testPrayerNotification(language: string) {
         ? "الإشعارات تعمل بنجاح 🌙"
         : "Notifications are working successfully 🌙";
 
-    new Notification(title, {
-      body,
-      tag: "falak-notification-test",
-    });
+    try {
+      if ("serviceWorker" in navigator) {
+        const registration = await navigator.serviceWorker.ready;
+
+        await registration.showNotification(title, {
+          body,
+
+          icon: "/falak-192.png",
+
+          badge: "/falak-192.png",
+
+          tag: "falak-notification-test",
+        });
+
+        console.log("✅ Falak notification sent through Service Worker.");
+
+        return;
+      }
+
+      new Notification(title, {
+        body,
+        icon: "/falak-192.png",
+        tag: "falak-notification-test",
+      });
+
+      console.log("✅ Falak notification sent through Notification API.");
+    } catch (error) {
+      console.error("❌ Falak notification failed:", error);
+    }
   }, 10_000);
 }
