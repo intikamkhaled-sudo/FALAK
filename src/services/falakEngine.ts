@@ -51,7 +51,12 @@ export function getFalakReport(input: FalakInput): FalakReport {
 
   const moon = calculateMoonData(input.date);
 
-  const hijri = gregorianToHijri(input.date);
+  const hijri = gregorianToHijri(
+    input.date,
+    input.latitude,
+    input.longitude,
+    input.elevation,
+  );
 
   const crescent = calculateRealCrescent({
     latitude: input.latitude,

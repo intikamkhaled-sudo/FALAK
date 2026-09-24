@@ -1,58 +1,56 @@
-import type { CrescentData } from "../types/crescent";
+import type {
+  CrescentData,
+  VisibilityLevel,
+  VisibilityConfidence,
+  YallopClass,
+} from "../types/crescent";
 
-function calculateVisibility(
-  ageHours: number,
-  illumination: number,
-  altitude: number,
-  elongation: number,
-  lagMinutes: number,
-): CrescentData["visibility"] {
-  /*
-   * Basic physical rejection
-   */
-
-  if (
-    ageHours < 12 ||
-    illumination < 0.5 ||
-    elongation < 8 ||
-    altitude < 3 ||
-    lagMinutes < 20
-  ) {
-    return "NOT_VISIBLE";
-  }
-
-  /*
-   * Possible visibility
-   */
-
-  if (
-    ageHours >= 18 &&
-    illumination >= 1 &&
-    altitude >= 5 &&
-    elongation >= 10 &&
-    lagMinutes >= 30
-  ) {
+/*
+ * Convert Yallop classification
+ * into Falak's simple visibility status.
+ *
+ * A:
+ * Easily visible with naked eye.
+ *
+ * B:
+ * Visible with naked eye under
+ * very good conditions.
+ *
+ * C:
+ * Optical aid may be required
+ * to locate the crescent.
+ *
+ * D:
+ * Optical aid required.
+ *
+ * E / F:
+ * Not visible according to
+ * the Yallop criterion.
+ */
+function getVisibilityFromYallop(yallopClass: YallopClass): VisibilityLevel {
+  if (yallopClass === "A" || yallopClass === "B") {
     return "VISIBLE";
   }
 
-  return "POSSIBLE";
+  if (yallopClass === "C" || yallopClass === "D") {
+    return "POSSIBLE";
+  }
+
+  return "NOT_VISIBLE";
 }
 
-function calculateConfidence(
-  visibility: CrescentData["visibility"],
-  yallopClass?: string,
-): CrescentData["confidence"] {
-  /*
-   * Yallop gives stronger confidence
-   */
-  if (yallopClass === "D" && visibility === "NOT_VISIBLE") {
-    return "CERTAIN";
-  }
-  if (yallopClass === "E") {
-    return "CERTAIN";
-  }
-
-  if (yallopClass === "A") {
+/*
+ * Confidence describes how strongly
+ * Falak can present the simplified
+ * visibility result.
+ *
+ * It is NOT another astronomical
+ * visibility criterion.
+ */
+function getConfidenceFromYallop(
+  yallopClass: YallopClass,
+): VisibilityConfidence {
+  if (yallopClass === "A" || yallopClass === "E" || yallopClass === "F") {
     return "CERTAIN";
   }
 
@@ -60,53 +58,82 @@ function calculateConfidence(
     return "LIKELY";
   }
 
-  if (visibility === "VISIBLE") {
-    return "LIKELY";
-  }
-
   return "UNCERTAIN";
 }
 
+export interface CrescentVisibilityInput {
+  moonAgeHours: number;
+  illumination: number;
+
+  altitude: number;
+  elongation: number;
+  lagMinutes: number;
+
+  yallopClass: YallopClass;
+  yallopQ: number;
+
+  conjunction?: Date | null;
+
+  sunset?: Date | null;
+  moonset?: Date | null;
+  bestTime?: Date | null;
+
+  arcv?: number;
+  arcl?: number;
+  daz?: number;
+
+  crescentWidthArcMin?: number;
+}
+
+/*
+ * Build the final CrescentData object.
+ *
+ * All astronomical calculations are
+ * performed elsewhere.
+ *
+ * This function only converts the
+ * Yallop result into the simplified
+ * Falak UI representation.
+ */
 export function calculateCrescentVisibility(
-  moonAgeHours: number,
-
-  illumination: number,
-
-  altitude: number,
-
-  elongation: number,
-
-  lagMinutes: number,
-
-  yallopClass?: string,
+  input: CrescentVisibilityInput,
 ): CrescentData {
-  const visibility = calculateVisibility(
-    moonAgeHours,
+  const visibility = getVisibilityFromYallop(input.yallopClass);
 
-    illumination,
-
-    altitude,
-
-    elongation,
-
-    lagMinutes,
-  );
+  const confidence = getConfidenceFromYallop(input.yallopClass);
 
   return {
-    moonAgeHours,
+    moonAgeHours: input.moonAgeHours,
 
-    illumination,
+    illumination: input.illumination,
 
-    altitude,
+    altitude: input.altitude,
 
-    elongation,
+    elongation: input.elongation,
 
-    lagMinutes,
+    lagMinutes: input.lagMinutes,
 
     visibility,
+    confidence,
 
-    confidence: calculateConfidence(visibility, yallopClass),
+    yallopClass: input.yallopClass,
 
-    yallopClass,
+    yallopQ: input.yallopQ,
+
+    conjunction: input.conjunction ?? null,
+
+    sunset: input.sunset ?? null,
+
+    moonset: input.moonset ?? null,
+
+    bestTime: input.bestTime ?? null,
+
+    arcv: input.arcv,
+
+    arcl: input.arcl,
+
+    daz: input.daz,
+
+    crescentWidthArcMin: input.crescentWidthArcMin,
   };
 }

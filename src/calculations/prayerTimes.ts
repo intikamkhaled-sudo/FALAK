@@ -11,6 +11,7 @@ import {
 import { getPrayerMethod } from "./prayerMethods";
 
 import type { PrayerMethod, PrayerMethodKey } from "../types/prayer";
+
 import { isShortNight } from "./highLatitudeValidation";
 import { applyHighLatitudeRule } from "./highLatitude";
 
@@ -45,10 +46,20 @@ export interface PrayerCalculationInput {
 }
 
 /**
- * Calculate the solar declination at solar noon.
+ * Create a stable search starting point for
+ * the requested calendar day.
  *
- * This is important for Asr because the shadow calculation
- * should use the Sun's declination around solar transit.
+ * We start from 00:00 UTC so the result does
+ * not depend on the current hour/minute/second.
+ */
+function getDayStart(date: Date): Date {
+  return new Date(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0),
+  );
+}
+
+/**
+ * Calculate solar declination at solar noon.
  */
 function getSolarDeclinationAtNoon(
   observer: Observer,
@@ -68,16 +79,11 @@ function getSolarDeclinationAtNoon(
 }
 
 /**
- * Calculate Asr solar hour angle from:
+ * Calculate Asr solar hour angle.
  *
- * shadowFactor = 1  → Shafi'i / Standard
- * shadowFactor = 2  → Hanafi
- *
- * Formula:
- *
- * altitude = atan(
- *   1 / (shadowFactor + tan(|latitude - declination|))
- * )
+ * shadowFactor:
+ * 1 = Shafi'i / Standard
+ * 2 = Hanafi
  */
 function calculateAsrHourAngle(
   latitude: number,
@@ -94,15 +100,6 @@ function calculateAsrHourAngle(
 
   const altitudeDeg = (altitudeRad * 180) / Math.PI;
 
-  /**
-   * Convert altitude to solar hour angle.
-   *
-   * sin(h) =
-   * sin(altitude)
-   * - sin(latitude)sin(declination)
-   * -------------------------------------
-   * cos(latitude)cos(declination)
-   */
   const numerator =
     Math.sin((altitudeDeg * Math.PI) / 180) -
     Math.sin(latitudeRad) * Math.sin(declinationRad);
@@ -111,10 +108,6 @@ function calculateAsrHourAngle(
 
   const cosHourAngle = numerator / denominator;
 
-  /**
-   * Numerical protection against tiny
-   * floating-point errors.
-   */
   const clampedCosHourAngle = Math.max(-1, Math.min(1, cosHourAngle));
 
   const hourAngleRad = Math.acos(clampedCosHourAngle);
@@ -122,12 +115,14 @@ function calculateAsrHourAngle(
   const hourAngleDeg = (hourAngleRad * 180) / Math.PI;
 
   /**
-   * Astronomy Engine SearchHourAngle
-   * expects sidereal hours.
+   * SearchHourAngle expects sidereal hours.
    */
   return hourAngleDeg / 15;
 }
 
+/**
+ * Calculate Fajr.
+ */
 function calculateFajr(
   observer: Observer,
   time: ReturnType<typeof MakeTime>,
@@ -154,7 +149,7 @@ function calculateFajr(
   }
 
   /*
-   * High latitude fallback
+   * High latitude fallback.
    */
   if (shortNight && sunrise && sunset && method.highLatitude.rule !== "NONE") {
     return applyHighLatitudeRule(
@@ -170,9 +165,6 @@ function calculateFajr(
 
 /**
  * Calculate sunrise.
- *
- * SearchRiseSet accounts for the Sun's
- * upper limb and atmospheric refraction.
  */
 function calculateSunrise(
   observer: Observer,
@@ -182,6 +174,10 @@ function calculateSunrise(
 
   return event ? event.date : null;
 }
+
+/**
+ * Calculate Imsak.
+ */
 function calculateImsak(fajr: Date | null, method: PrayerMethod): Date | null {
   if (!fajr || !method.imsak.enabled) {
     return null;
@@ -189,9 +185,7 @@ function calculateImsak(fajr: Date | null, method: PrayerMethod): Date | null {
 
   return new Date(fajr.getTime() - method.imsak.minutesBeforeFajr * 60 * 1000);
 }
-/**
- * Calculate solar noon / Dhuhr.
- */
+
 /**
  * Calculate solar noon / Dhuhr.
  */
@@ -238,15 +232,6 @@ function calculateMaghrib(
 
 /**
  * Calculate Isha.
- *
- * Supported rules:
- *
- * ANGLE:
- *     Search when Sun reaches the
- *     specified depression angle.
- *
- * MINUTES:
- *     Add fixed minutes after Maghrib.
  */
 function calculateIsha(
   observer: Observer,
@@ -272,14 +257,14 @@ function calculateIsha(
   }
 
   /*
-   * Fixed minutes after Maghrib
+   * Fixed minutes after Maghrib.
    */
   if (method.isha.type === "MINUTES" && maghrib) {
     return new Date(maghrib.getTime() + method.isha.value * 60 * 1000);
   }
 
   /*
-   * High latitude fallback
+   * High latitude fallback.
    */
   if (sunrise && sunset && method.highLatitude.rule !== "NONE") {
     return applyHighLatitudeRule(
@@ -293,6 +278,9 @@ function calculateIsha(
   return null;
 }
 
+/**
+ * Calculate Islamic midnight.
+ */
 function calculateIslamicMidnight(
   maghrib: Date | null,
   fajr: Date | null,
@@ -302,7 +290,9 @@ function calculateIslamicMidnight(
   }
 
   const day = 24 * 60 * 60 * 1000;
+
   const maghribTime = maghrib.getTime();
+
   let fajrTime = fajr.getTime();
 
   if (fajrTime <= maghribTime) {
@@ -320,16 +310,23 @@ export function calculatePrayerTimes(
 ): PrayerTimes {
   const { latitude, longitude, elevation, date } = input;
 
-  /**
-   * Custom method has priority.
-   * Otherwise use methodKey.
-   * Default = Egyptian.
-   */
   const method = input.method ?? getPrayerMethod(input.methodKey ?? "EGYPTIAN");
 
   const observer = new Observer(latitude, longitude, elevation);
 
-  const time = MakeTime(date);
+  /*
+   * IMPORTANT:
+   *
+   * All searches now start from the same
+   * stable point for the requested day.
+   *
+   * The result therefore does not depend
+   * on whether Falak was opened at
+   * 01:00, 12:00, or 23:00.
+   */
+  const dayStart = getDayStart(date);
+
+  const time = MakeTime(dayStart);
 
   const sunrise = calculateSunrise(observer, time);
 
@@ -337,6 +334,7 @@ export function calculatePrayerTimes(
 
   const shortNight =
     sunrise && maghrib ? isShortNight(maghrib, sunrise, 90) : false;
+
   const fajr = calculateFajr(
     observer,
     time,
@@ -345,6 +343,7 @@ export function calculatePrayerTimes(
     maghrib,
     shortNight,
   );
+
   const imsak = calculateImsak(fajr, method);
 
   const dhuhr = calculateDhuhr(observer, time);
@@ -361,6 +360,7 @@ export function calculatePrayerTimes(
     asr,
     maghrib,
     isha,
+
     midnight: calculateIslamicMidnight(maghrib, fajr),
   };
 }

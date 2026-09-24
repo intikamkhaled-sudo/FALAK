@@ -16,26 +16,48 @@ import QiblaCard from "../components/QiblaCard";
 
 import { useLanguage } from "../context/LanguageContext";
 
+interface DashboardCity {
+  name: string;
+  nameAr?: string;
+
+  country: string;
+  countryAr?: string;
+
+  latitude: number;
+  longitude: number;
+  elevation?: number;
+}
+
 export default function Dashboard() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
-  const savedCity = localStorage.getItem("falak-city");
+  const [city, setCity] = useState<DashboardCity>(() => {
+    const savedCity = localStorage.getItem("falak-city");
 
-  const initialCity = savedCity ? JSON.parse(savedCity) : cities[0];
+    if (savedCity) {
+      try {
+        return JSON.parse(savedCity);
+      } catch {
+        localStorage.removeItem("falak-city");
+      }
+    }
 
-  const [city, setCity] = useState(initialCity);
+    return cities[0];
+  });
 
-  function changeCity(newCity: any) {
+  function changeCity(newCity: DashboardCity) {
     setCity(newCity);
 
     localStorage.setItem("falak-city", JSON.stringify(newCity));
   }
 
+  const now = new Date();
+
   const report = getFalakReport({
     latitude: city.latitude,
     longitude: city.longitude,
     elevation: city.elevation ?? 0,
-    date: new Date(),
+    date: now,
   });
 
   return (
@@ -46,20 +68,23 @@ export default function Dashboard() {
         </section>
 
         <section className="location-section">
-          <LocationSelector onChange={changeCity} />
+          <LocationSelector currentCity={city} onChange={changeCity} />
 
           <GeoLocationButton
             onLocation={(location) => {
-              const gpsCity = {
-                name: t("currentLocation"),
-                country: language === "ar" ? "تحديد الموقع" : "GPS",
+              const gpsCity: DashboardCity = {
+                name: "Current Location",
+                nameAr: "موقعي الحالي",
+
+                country: "GPS",
+                countryAr: "تحديد الموقع",
+
                 ...location,
+
                 elevation: location.elevation ?? 0,
               };
 
-              setCity(gpsCity);
-
-              localStorage.setItem("falak-city", JSON.stringify(gpsCity));
+              changeCity(gpsCity);
             }}
           />
         </section>

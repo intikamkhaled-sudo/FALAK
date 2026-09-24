@@ -6,8 +6,6 @@ export interface HijriDate {
   year: number;
 
   monthName: string;
-
-  isLeapYear: boolean;
 }
 
 export interface HijriMonth {

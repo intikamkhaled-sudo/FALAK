@@ -16,11 +16,18 @@ interface City {
 }
 
 interface Props {
+  currentCity: City;
   onChange: (city: City) => void;
 }
 
-export default function LocationSelector({ onChange }: Props) {
+export default function LocationSelector({ currentCity, onChange }: Props) {
   const { language } = useLanguage();
+
+  const selectedIndex = cities.findIndex(
+    (city) =>
+      city.latitude === currentCity.latitude &&
+      city.longitude === currentCity.longitude,
+  );
 
   function handleChange(event: ChangeEvent<HTMLSelectElement>) {
     const index = Number(event.target.value);
@@ -37,10 +44,16 @@ export default function LocationSelector({ onChange }: Props) {
       <span className="location-select-icon">🌍</span>
 
       <select
-        defaultValue="0"
+        value={selectedIndex >= 0 ? selectedIndex.toString() : "gps"}
         onChange={handleChange}
         aria-label={language === "ar" ? "اختر المدينة" : "Select city"}
       >
+        {selectedIndex === -1 && (
+          <option value="gps" disabled>
+            {language === "ar" ? "موقعي الحالي" : "Current Location"}
+          </option>
+        )}
+
         {cities.map((city, index) => {
           const cityName =
             language === "ar" ? city.nameAr || city.name : city.name;
