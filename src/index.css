@@ -1026,3 +1026,413 @@ html[dir="ltr"] .falak-content {
     font-size: 12px;
   }
 }
+/* =========================
+   About Falak
+   ========================= */
+
+.about-falak-button {
+  margin-top: 18px;
+  padding: 8px 18px;
+
+  border: 1px solid rgba(255, 209, 102, 0.3);
+  border-radius: 999px;
+
+  background: rgba(255, 209, 102, 0.06);
+  color: #ffd166;
+
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.about-falak-button:hover {
+  transform: translateY(-2px);
+
+  background: rgba(255, 209, 102, 0.12);
+  border-color: rgba(255, 209, 102, 0.55);
+}
+
+.about-falak-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(3, 8, 20, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.about-falak-modal {
+  position: relative;
+
+  width: min(460px, 100%);
+  padding: 42px 36px 34px;
+
+  overflow: hidden;
+
+  text-align: center;
+
+  border: 1px solid rgba(255, 209, 102, 0.25);
+  border-radius: 28px;
+
+  background:
+    radial-gradient(circle at top, rgba(255, 209, 102, 0.13), transparent 42%),
+    rgba(15, 21, 39, 0.94);
+
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.5),
+    0 0 45px rgba(255, 209, 102, 0.06);
+}
+
+.about-falak-close {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+
+  width: 34px;
+  height: 34px;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.75);
+
+  font-size: 24px;
+  line-height: 1;
+
+  cursor: pointer;
+}
+
+.about-falak-icon {
+  color: #ffd166;
+
+  font-size: 54px;
+  line-height: 1;
+
+  text-shadow: 0 0 25px rgba(255, 209, 102, 0.25);
+}
+
+.about-falak-modal h2 {
+  margin: 14px 0 4px;
+
+  color: #ffd166;
+
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: 7px;
+}
+
+.about-falak-version {
+  display: inline-block;
+
+  margin-top: 6px;
+  padding: 4px 10px;
+
+  border: 1px solid rgba(255, 209, 102, 0.2);
+  border-radius: 999px;
+
+  color: rgba(255, 209, 102, 0.8);
+
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.about-falak-description {
+  max-width: 390px;
+
+  margin: 24px auto 0;
+
+  color: rgba(255, 255, 255, 0.8);
+
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+.about-falak-divider {
+  width: 60px;
+  height: 1px;
+
+  margin: 25px auto;
+
+  background: rgba(255, 209, 102, 0.35);
+}
+
+.about-falak-developer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  color: rgba(255, 255, 255, 0.6);
+
+  font-size: 12px;
+}
+
+.about-falak-developer strong {
+  color: #ffd166;
+
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.about-falak-rights {
+  margin-top: 22px;
+
+  color: rgba(255, 255, 255, 0.42);
+
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+@media (max-width: 600px) {
+  .about-falak-modal {
+    padding: 38px 22px 30px;
+    border-radius: 22px;
+  }
+
+  .about-falak-icon {
+    font-size: 46px;
+  }
+
+  .about-falak-modal h2 {
+    font-size: 25px;
+    letter-spacing: 5px;
+  }
+
+  .about-falak-description {
+    font-size: 13px;
+  }
+}
+/* =========================
+   Quran Reflection
+   ========================= */
+
+.verse-section {
+  width: 100%;
+  margin: 24px 0 38px;
+}
+
+.prayer-verse-card {
+  position: relative;
+  overflow: hidden;
+
+  width: 100%;
+  max-width: 1100px;
+
+  margin: 0 auto;
+  padding: 28px 48px 30px;
+
+  text-align: center;
+
+  border: 1px solid rgba(255, 209, 102, 0.16);
+  border-radius: 22px;
+
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(255, 209, 102, 0.09),
+      transparent 48%
+    ),
+    linear-gradient(135deg, rgba(18, 25, 45, 0.82), rgba(8, 14, 29, 0.76));
+
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* subtle golden line */
+
+.prayer-verse-card::before {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  left: 50%;
+
+  width: 180px;
+  height: 1px;
+
+  transform: translateX(-50%);
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 209, 102, 0.85),
+    transparent
+  );
+}
+
+/* =========================
+   Ornament
+   ========================= */
+
+.verse-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: min(300px, 70%);
+  margin: 0 auto 10px;
+
+  gap: 13px;
+}
+
+.verse-ornament span {
+  flex: 1;
+  height: 1px;
+
+  background: linear-gradient(90deg, transparent, rgba(255, 209, 102, 0.35));
+}
+
+.verse-ornament span:last-child {
+  background: linear-gradient(90deg, rgba(255, 209, 102, 0.35), transparent);
+}
+
+.verse-ornament strong {
+  color: #ffd166;
+
+  font-size: 18px;
+  font-weight: 400;
+
+  text-shadow: 0 0 18px rgba(255, 209, 102, 0.3);
+}
+
+/* =========================
+   Context
+   ========================= */
+
+.prayer-verse-context {
+  margin-bottom: 13px;
+
+  color: rgba(255, 209, 102, 0.72);
+
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+/* =========================
+   Quran Text
+   ========================= */
+
+.prayer-verse-text {
+  max-width: 900px;
+
+  margin: 0 auto;
+
+  color: rgba(255, 255, 255, 0.96);
+
+  font-family: "Amiri", "Noto Naskh Arabic", "Traditional Arabic", serif;
+
+  font-size: clamp(21px, 2vw, 28px);
+  font-weight: 500;
+
+  line-height: 2.05;
+
+  direction: rtl;
+  text-align: center;
+
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.22);
+}
+
+/* =========================
+   Reference
+   ========================= */
+
+.prayer-verse-reference {
+  display: inline-block;
+
+  margin-top: 14px;
+  padding: 5px 13px;
+
+  border: 1px solid rgba(255, 209, 102, 0.13);
+  border-radius: 999px;
+
+  background: rgba(255, 209, 102, 0.04);
+
+  color: rgba(255, 209, 102, 0.75);
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* =========================
+   Hover - Desktop
+   ========================= */
+
+@media (hover: hover) {
+  .prayer-verse-card {
+    transition:
+      border-color 0.25s ease,
+      box-shadow 0.25s ease,
+      transform 0.25s ease;
+  }
+
+  .prayer-verse-card:hover {
+    transform: translateY(-2px);
+
+    border-color: rgba(255, 209, 102, 0.28);
+
+    box-shadow:
+      0 22px 55px rgba(0, 0, 0, 0.22),
+      0 0 30px rgba(255, 209, 102, 0.035);
+  }
+}
+
+/* =========================
+   Mobile
+   ========================= */
+
+@media (max-width: 700px) {
+  .verse-section {
+    margin: 18px 0 30px;
+  }
+
+  .prayer-verse-card {
+    padding: 23px 18px 24px;
+
+    border-radius: 19px;
+  }
+
+  .verse-ornament {
+    width: 65%;
+    margin-bottom: 9px;
+  }
+
+  .verse-ornament strong {
+    font-size: 16px;
+  }
+
+  .prayer-verse-context {
+    margin-bottom: 10px;
+
+    font-size: 11px;
+  }
+
+  .prayer-verse-text {
+    font-size: 19px;
+    line-height: 2;
+  }
+
+  .prayer-verse-reference {
+    margin-top: 12px;
+
+    font-size: 10px;
+  }
+}

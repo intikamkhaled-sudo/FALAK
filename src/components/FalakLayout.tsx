@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import LanguageButton from "./LanguageButton";
 import { useLanguage } from "../context/LanguageContext";
-
+import AboutFalak from "./AboutFalak";
 interface Props {
   children: ReactNode;
 }
@@ -35,6 +35,7 @@ export default function FalakLayout({ children }: Props) {
             ? "تصميم وتطوير ENG/Khaled Ismail"
             : "Designed & Developed by ENG/Khaled Ismail"}
         </div>
+        <AboutFalak />
       </footer>
     </div>
   );

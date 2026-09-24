@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { getFalakReport } from "../services/falakEngine";
 import { cities } from "../data/cities";
@@ -8,11 +8,14 @@ import LocationSelector from "../components/LocationSelector";
 import GeoLocationButton from "../components/GeoLocationButton";
 import FalakHero from "../components/FalakHero";
 import NextPrayer from "../components/NextPrayer";
+import PrayerVerseCard from "../components/PrayerVerseCard";
 import PrayerCard from "../components/PrayerCard";
 import HijriCard from "../components/HijriCard";
 import MoonCard from "../components/MoonCard";
 import CrescentCard from "../components/CrescentCard";
 import QiblaCard from "../components/QiblaCard";
+
+import type { PrayerVerseKey } from "../data/prayerVerses";
 
 import { useLanguage } from "../context/LanguageContext";
 
@@ -26,6 +29,11 @@ interface DashboardCity {
   latitude: number;
   longitude: number;
   elevation?: number;
+}
+
+interface PrayerCandidate {
+  name: PrayerVerseKey;
+  time: Date;
 }
 
 export default function Dashboard() {
@@ -60,6 +68,47 @@ export default function Dashboard() {
     date: now,
   });
 
+  const nextPrayerName = useMemo<PrayerVerseKey>(() => {
+    const prayers: PrayerCandidate[] = [
+      {
+        name: "fajr",
+        time: report.prayers.fajr,
+      },
+      {
+        name: "dhuhr",
+        time: report.prayers.dhuhr,
+      },
+      {
+        name: "asr",
+        time: report.prayers.asr,
+      },
+      {
+        name: "maghrib",
+        time: report.prayers.maghrib,
+      },
+      {
+        name: "isha",
+        time: report.prayers.isha,
+      },
+    ].filter(
+      (prayer): prayer is PrayerCandidate =>
+        prayer.time instanceof Date && !Number.isNaN(prayer.time.getTime()),
+    );
+
+    const upcoming = prayers.find(
+      (prayer) => prayer.time.getTime() > now.getTime(),
+    );
+
+    return upcoming?.name ?? "fajr";
+  }, [
+    report.prayers.fajr,
+    report.prayers.dhuhr,
+    report.prayers.asr,
+    report.prayers.maghrib,
+    report.prayers.isha,
+    now,
+  ]);
+
   return (
     <FalakLayout>
       <main className="dashboard-layout">
@@ -91,6 +140,10 @@ export default function Dashboard() {
 
         <section className="next-section">
           <NextPrayer prayers={report.prayers} />
+        </section>
+
+        <section className="verse-section">
+          <PrayerVerseCard nextPrayer={nextPrayerName} />
         </section>
 
         <h2 className="section-title">🕌 {t("prayerTimes")}</h2>
