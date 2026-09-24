@@ -1,32 +1,133 @@
-# React + TypeScript + Vite
+# 🌙 FALAK
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+**FALAK** is an astronomy-based Islamic companion application developed by **ENG/Khaled Ismail**.
 
-Currently, two official plugins are available:
+The project combines astronomical calculations with a modern responsive interface to provide prayer times, Hijri calendar information, lunar data, crescent visibility analysis, and Qibla direction.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## ✨ Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 🕌 Prayer Times
 
-## Expanding the Oxlint configuration
+Prayer times are calculated from astronomical solar positions using geographic coordinates.
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+The application currently supports:
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
+- Fajr
+- Sunrise
+- Dhuhr
+- Asr
+- Maghrib
+- Isha
+- Next prayer detection
+- Prayer countdown
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+### 🌙 Astronomical Hijri Calendar
+
+FALAK includes a location-based astronomical Hijri calendar engine.
+
+The calculation uses astronomical events including:
+
+- Lunar conjunction
+- Local sunset
+- Moonset
+- Crescent geometry
+- Crescent visibility
+- Lunar month start
+- Sunset-to-sunset Hijri day progression
+
+The calendar is designed to derive the Hijri date from astronomical calculations rather than relying solely on a pre-generated calendar table.
+
+### 🔭 Crescent Visibility
+
+The crescent module evaluates astronomical parameters including:
+
+- Moon age
+- Elongation
+- ARCL
+- ARCV
+- Relative azimuth
+- Crescent width
+- Moon altitude
+- Moonset lag
+- Illumination
+
+The project also includes a Yallop-based crescent visibility classification.
+
+### 🧭 Live Qibla Compass
+
+FALAK calculates the Qibla bearing dynamically from the user's geographic coordinates.
+
+On supported mobile devices, the application can use device orientation sensors to provide a live Qibla compass.
+
+The module also calculates the approximate great-circle distance to the Kaaba.
+
+### 🌍 Location Based
+
+Astronomical calculations use geographic parameters including:
+
+- Latitude
+- Longitude
+- Elevation
+
+This allows calculations to adapt to the selected location.
+
+### 🌐 Languages
+
+FALAK currently supports:
+
+- Arabic
+- English
+- RTL / LTR interface switching
+
+---
+
+## 🛠 Technology
+
+FALAK is built with:
+
+- React
+- TypeScript
+- Vite
+- Astronomy Engine
+- Browser Geolocation API
+- Device Orientation API
+
+---
+
+## 👨‍💻 Creator & Developer
+
+**ENG/Khaled Ismail**
+
+Creator, developer, and project owner of FALAK.
+
+---
+
+## 📌 Project Status
+
+Current development milestone:
+
+**FALAK v1.0.0**
+
+The project is under active development and astronomical calculations may continue to be validated and refined.
+
+---
+
+## ⚠️ Disclaimer
+
+FALAK provides astronomical calculations and informational results.
+
+Prayer times, crescent visibility, and Hijri calendar practices may vary according to calculation methods, observational criteria, local authorities, and religious institutions.
+
+Users should consult the relevant local authority when an officially adopted religious date or prayer schedule is required.
+
+---
+
+## © Copyright
+
+Copyright © 2026 ENG/Khaled Ismail.
+
+All Rights Reserved.
+
+No permission is granted to copy, modify, distribute, sublicense, or commercially use the source code or substantial portions of this project without prior written permission from the copyright holder.
