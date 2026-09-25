@@ -9,6 +9,11 @@ export default defineConfig({
     react(),
 
     VitePWA({
+      strategies: "injectManifest",
+
+      srcDir: "src",
+      filename: "sw.ts",
+
       registerType: "autoUpdate",
 
       includeAssets: [
@@ -55,9 +60,7 @@ export default defineConfig({
         ],
       },
 
-      workbox: {
-        cleanupOutdatedCaches: true,
-
+      injectManifest: {
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
 
         globPatterns: ["**/*.{js,css,html,png,svg,ico,woff2}"],
