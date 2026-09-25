@@ -63,6 +63,8 @@ export async function syncPushSubscription(
 
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
+  console.log("📡 Sending subscription to API");
+
   const response = await fetch("/api/push/subscribe", {
     method: "POST",
 
@@ -88,6 +90,8 @@ export async function syncPushSubscription(
       settings,
     }),
   });
+
+  console.log("📡 API response:", response.status);
 
   if (!response.ok) {
     let message = `Push subscription failed (${response.status})`;

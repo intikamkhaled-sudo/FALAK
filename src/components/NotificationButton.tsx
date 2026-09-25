@@ -30,15 +30,17 @@ export default function NotificationButton() {
 
   async function registerWebPush() {
     try {
+      console.log("🔔 Falak: starting Web Push registration");
+
       setIsSubscribing(true);
 
       await syncPushSubscription(language);
 
-      console.log("Falak Web Push subscription synced.");
+      console.log("✅ Falak: Web Push subscription synced");
 
       window.dispatchEvent(new Event("falak-notification-permission"));
     } catch (error) {
-      console.error("Unable to register Falak Web Push:", error);
+      console.error("❌ Falak Web Push error:", error);
     } finally {
       setIsSubscribing(false);
     }
@@ -54,16 +56,10 @@ export default function NotificationButton() {
     }
 
     if (Notification.permission === "granted") {
-      /*
-       * Important:
-       * Existing Falak users may already have notification
-       * permission from before Web Push was added.
-       *
-       * Therefore we still sync/create their PushSubscription.
-       */
       await registerWebPush();
 
       setSettingsOpen(true);
+
       return;
     }
 
@@ -93,14 +89,12 @@ export default function NotificationButton() {
   function getTitle() {
     if (status === "unsupported") {
       return language === "ar"
-        ? "الإشعارات غير مدعومة على هذا المتصفح"
-        : "Notifications are not supported by this browser";
+        ? "الإشعارات غير مدعومة"
+        : "Notifications unsupported";
     }
 
     if (status === "denied") {
-      return language === "ar"
-        ? "تم رفض إذن الإشعارات من المتصفح"
-        : "Notification permission was denied";
+      return language === "ar" ? "تم رفض الإشعارات" : "Notifications denied";
     }
 
     if (isSubscribing) {
