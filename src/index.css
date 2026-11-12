@@ -1787,3 +1787,18 @@ html[dir="ltr"] .falak-content {
     border-radius: 24px 24px 0 0;
   }
 }
+
+/* Keep numeric values and units in their natural order inside RTL layouts. */
+.numeric-ltr {
+  direction: ltr;
+  unicode-bidi: isolate;
+  display: inline-block;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.numeric-inline {
+  direction: ltr;
+  unicode-bidi: isolate;
+  white-space: nowrap;
+}

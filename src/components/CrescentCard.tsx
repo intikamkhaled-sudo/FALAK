@@ -12,13 +12,10 @@ export default function CrescentCard({ crescent }: Props) {
     switch (value) {
       case "VISIBLE":
         return t("visible");
-
       case "POSSIBLE":
         return t("possible");
-
       case "NOT_VISIBLE":
         return t("notVisible");
-
       default:
         return value;
     }
@@ -28,13 +25,10 @@ export default function CrescentCard({ crescent }: Props) {
     switch (value) {
       case "CERTAIN":
         return t("certain");
-
       case "LIKELY":
         return t("likely");
-
       case "UNCERTAIN":
         return t("uncertain");
-
       default:
         return value;
     }
@@ -56,25 +50,35 @@ export default function CrescentCard({ crescent }: Props) {
 
         <div className="crescent-item">
           <span>{t("altitude")}</span>
-          <strong>{crescent.altitude.toFixed(2)}°</strong>
+          <strong>
+            <span className="numeric-ltr">{crescent.altitude.toFixed(2)}°</span>
+          </strong>
         </div>
 
         <div className="crescent-item">
           <span>{t("elongation")}</span>
-          <strong>{crescent.elongation.toFixed(2)}°</strong>
+          <strong>
+            <span className="numeric-ltr">
+              {crescent.elongation.toFixed(2)}°
+            </span>
+          </strong>
         </div>
 
         <div className="crescent-item">
           <span>{t("moonsetLag")}</span>
           <strong>
-            {crescent.lagMinutes} {t("minutes")}
+            <span className="numeric-ltr">{crescent.lagMinutes}</span>{" "}
+            {t("minutes")}
           </strong>
         </div>
 
         <div className="crescent-item">
           <span>{t("moonAge")}</span>
           <strong>
-            {(crescent.moonAgeHours / 24).toFixed(1)} {t("days")}
+            <span className="numeric-ltr">
+              {(crescent.moonAgeHours / 24).toFixed(1)}
+            </span>{" "}
+            {t("days")}
           </strong>
         </div>
 

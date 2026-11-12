@@ -111,7 +111,11 @@ export default function FalakHero({ city, hijri, moon }: Props) {
       <div className="hero-date">{formattedDate}</div>
 
       <div className="hero-hijri">
-        📅 {hijriDay} {hijriMonth} {hijriYear} {language === "ar" ? "هـ" : "AH"}
+        📅{" "}
+        <span className="numeric-inline">
+          {hijriDay} {hijriYear}
+        </span>{" "}
+        {hijriMonth} {language === "ar" ? "هـ" : "AH"}
       </div>
 
       <div className="hero-moon">
@@ -119,11 +123,13 @@ export default function FalakHero({ city, hijri, moon }: Props) {
         <br />
         {language === "ar" ? (
           <>
-            {illumination}٪ {t("illumination")}
+            <span className="numeric-ltr">{illumination}٪</span>{" "}
+            {t("illumination")}
           </>
         ) : (
           <>
-            {illumination}% {t("illumination")}
+            <span className="numeric-ltr">{illumination}%</span>{" "}
+            {t("illumination")}
           </>
         )}
       </div>

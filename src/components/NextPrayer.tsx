@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-
 import { useLanguage } from "../context/LanguageContext";
-
 import type { PrayerVerseKey } from "../data/prayerVerses";
 
 interface PrayerTimes {
@@ -38,26 +36,11 @@ export default function NextPrayer({ prayers }: Props) {
 
   const nextPrayer = useMemo(() => {
     const list: PrayerItem[] = [
-      {
-        name: "fajr",
-        time: prayers.fajr,
-      },
-      {
-        name: "dhuhr",
-        time: prayers.dhuhr,
-      },
-      {
-        name: "asr",
-        time: prayers.asr,
-      },
-      {
-        name: "maghrib",
-        time: prayers.maghrib,
-      },
-      {
-        name: "isha",
-        time: prayers.isha,
-      },
+      { name: "fajr", time: prayers.fajr },
+      { name: "dhuhr", time: prayers.dhuhr },
+      { name: "asr", time: prayers.asr },
+      { name: "maghrib", time: prayers.maghrib },
+      { name: "isha", time: prayers.isha },
     ].filter(
       (item): item is PrayerItem =>
         item.time instanceof Date && !Number.isNaN(item.time.getTime()),
@@ -71,13 +54,9 @@ export default function NextPrayer({ prayers }: Props) {
       return upcoming;
     }
 
-    /*
-     * All today's prayers have passed.
-     * Use tomorrow's Fajr.
-     */
+    // All today's prayers have passed. Use tomorrow's Fajr.
     if (prayers.fajr instanceof Date && !Number.isNaN(prayers.fajr.getTime())) {
       const tomorrowFajr = new Date(prayers.fajr);
-
       tomorrowFajr.setDate(tomorrowFajr.getDate() + 1);
 
       return {
@@ -93,19 +72,14 @@ export default function NextPrayer({ prayers }: Props) {
     switch (name) {
       case "fajr":
         return t("fajr");
-
       case "dhuhr":
         return t("dhuhr");
-
       case "asr":
         return t("asr");
-
       case "maghrib":
         return t("maghrib");
-
       case "isha":
         return t("isha");
-
       default:
         return name;
     }
@@ -121,20 +95,14 @@ export default function NextPrayer({ prayers }: Props) {
 
   function getCountdown(target: Date) {
     const difference = Math.max(0, target.getTime() - now.getTime());
-
     const totalSeconds = Math.floor(difference / 1000);
-
     const hours = Math.floor(totalSeconds / 3600);
-
     const minutes = Math.floor((totalSeconds % 3600) / 60);
-
     const seconds = totalSeconds % 60;
 
     return [
       hours.toString().padStart(2, "0"),
-
       minutes.toString().padStart(2, "0"),
-
       seconds.toString().padStart(2, "0"),
     ].join(":");
   }
@@ -157,21 +125,16 @@ export default function NextPrayer({ prayers }: Props) {
 
     const targetTime = target.getTime();
 
-    let previousTime: number;
-
     const targetIndex = prayerTimes.findIndex(
       (time) => time.getTime() === targetTime,
     );
 
+    let previousTime: number;
+
     if (targetIndex > 0) {
       previousTime = prayerTimes[targetIndex - 1].getTime();
     } else {
-      /*
-       * Fajr is next.
-       *
-       * This value is only used
-       * for visual progress.
-       */
+      // Fajr is next. This is only used for visual progress.
       previousTime = targetTime - 8 * 60 * 60 * 1000;
     }
 
@@ -191,27 +154,27 @@ export default function NextPrayer({ prayers }: Props) {
   }
 
   return (
-    <>
-      <div className="next-prayer-card">
-        <h2>⏰ {t("nextPrayer")}</h2>
+    <div className="next-prayer-card">
+      <h2>⏰ {t("nextPrayer")}</h2>
 
-        <div className="next-name">🕌 {translatePrayer(nextPrayer.name)}</div>
+      <div className="next-name">🕌 {translatePrayer(nextPrayer.name)}</div>
 
-        <div className="next-time">{formatTime(nextPrayer.time)}</div>
+      <div className="next-time numeric-ltr">{formatTime(nextPrayer.time)}</div>
 
-        <div className="progress">
-          <div
-            className="progress-fill"
-            style={{
-              width: `${getProgress(nextPrayer.time)}%`,
-            }}
-          />
-        </div>
-
-        <div className="countdown">{getCountdown(nextPrayer.time)}</div>
-
-        <div className="remaining-label">{t("remainingTime")}</div>
+      <div className="progress">
+        <div
+          className="progress-fill"
+          style={{
+            width: `${getProgress(nextPrayer.time)}%`,
+          }}
+        />
       </div>
-    </>
+
+      <div className="countdown numeric-ltr">
+        {getCountdown(nextPrayer.time)}
+      </div>
+
+      <div className="remaining-label">{t("remainingTime")}</div>
+    </div>
   );
 }

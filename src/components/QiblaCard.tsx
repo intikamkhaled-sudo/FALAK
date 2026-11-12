@@ -40,11 +40,9 @@ export default function QiblaCard({ latitude, longitude }: Props) {
   const { language, t } = useLanguage();
 
   const qiblaBearing = calculateQiblaDirection(latitude, longitude);
-
   const distance = calculateDistanceToKaaba(latitude, longitude);
 
   const [deviceHeading, setDeviceHeading] = useState<number | null>(null);
-
   const [compassStatus, setCompassStatus] = useState<CompassStatus>("idle");
 
   useEffect(() => {
@@ -59,27 +57,11 @@ export default function QiblaCard({ latitude, longitude }: Props) {
 
       let heading: number | null = null;
 
-      /*
-       * iPhone / Safari.
-       *
-       * webkitCompassHeading is already
-       * a compass heading:
-       *
-       * 0   = North
-       * 90  = East
-       * 180 = South
-       * 270 = West
-       */
+      // iPhone / Safari: webkitCompassHeading is already a compass heading.
       if (typeof iosEvent.webkitCompassHeading === "number") {
         heading = iosEvent.webkitCompassHeading;
       } else if (typeof event.alpha === "number") {
-
-      /*
-       * Other browsers.
-       *
-       * Only use alpha when the browser
-       * provides orientation data.
-       */
+        // Other browsers.
         heading = normalizeDegrees(360 - event.alpha);
       }
 
@@ -88,20 +70,11 @@ export default function QiblaCard({ latitude, longitude }: Props) {
       }
 
       receivedHeading = true;
-
       setDeviceHeading(normalizeDegrees(heading));
-
       setCompassStatus("active");
     }
 
-    /*
-     * deviceorientationabsolute is preferable
-     * when available because the heading is
-     * intended to be relative to Earth.
-     *
-     * We also listen to deviceorientation
-     * for Safari/iOS compatibility.
-     */
+    // Prefer absolute orientation when available.
     window.addEventListener(
       "deviceorientationabsolute",
       handleOrientation as EventListener,
@@ -110,12 +83,6 @@ export default function QiblaCard({ latitude, longitude }: Props) {
 
     window.addEventListener("deviceorientation", handleOrientation, true);
 
-    /*
-     * Permission may succeed while the
-     * device/browser supplies no sensor data.
-     *
-     * Don't call that "permission denied".
-     */
     const timeout = window.setTimeout(() => {
       if (!receivedHeading) {
         setCompassStatus("waiting");
@@ -150,10 +117,7 @@ export default function QiblaCard({ latitude, longitude }: Props) {
       const orientationConstructor =
         DeviceOrientationEvent as unknown as DeviceOrientationEventConstructorIOS;
 
-      /*
-       * iOS requires permission from
-       * a direct user interaction.
-       */
+      // iOS requires permission from a direct user interaction.
       if (typeof orientationConstructor.requestPermission === "function") {
         const permission = await orientationConstructor.requestPermission();
 
@@ -166,7 +130,6 @@ export default function QiblaCard({ latitude, longitude }: Props) {
       setCompassStatus("waiting");
     } catch (error) {
       console.error("Compass activation failed:", error);
-
       setCompassStatus("error");
     }
   }
@@ -203,17 +166,8 @@ export default function QiblaCard({ latitude, longitude }: Props) {
     return t("northWest");
   }
 
-  /*
-   * Without live sensor data:
-   *
-   * the arrow shows Qibla relative
-   * to geographic north.
-   *
-   * With live sensor data:
-   *
-   * the phone heading is removed
-   * from the Qibla bearing.
-   */
+  // Without sensor data, the arrow shows Qibla relative to geographic north.
+  // With sensor data, the phone heading is removed from the Qibla bearing.
   const arrowRotation =
     deviceHeading === null
       ? qiblaBearing
@@ -235,11 +189,8 @@ export default function QiblaCard({ latitude, longitude }: Props) {
 
       <div className="compass">
         <span className="direction north">N</span>
-
         <span className="direction east">E</span>
-
         <span className="direction south">S</span>
-
         <span className="direction west">W</span>
 
         <div
@@ -254,7 +205,7 @@ export default function QiblaCard({ latitude, longitude }: Props) {
         <div className="kaaba-center">🕋</div>
       </div>
 
-      <div className="qibla-degree">{qiblaBearing.toFixed(1)}°</div>
+      <div className="qibla-degree numeric-ltr">{qiblaBearing.toFixed(1)}°</div>
 
       <div className="qibla-direction">{getDirectionName(qiblaBearing)}</div>
 
@@ -262,7 +213,9 @@ export default function QiblaCard({ latitude, longitude }: Props) {
         <div className="qibla-live-data">
           <div>
             🧭 {language === "ar" ? "اتجاه الجهاز" : "Device heading"}:{" "}
-            <strong>{deviceHeading.toFixed(0)}°</strong>
+            <strong>
+              <span className="numeric-ltr">{deviceHeading.toFixed(0)}°</span>
+            </strong>
           </div>
 
           <div>
@@ -273,7 +226,11 @@ export default function QiblaCard({ latitude, longitude }: Props) {
             ) : (
               <>
                 {language === "ar" ? "الانحراف عن القبلة" : "Qibla offset"}:{" "}
-                <strong>{Math.abs(alignmentError ?? 0).toFixed(0)}°</strong>
+                <strong>
+                  <span className="numeric-ltr">
+                    {Math.abs(alignmentError ?? 0).toFixed(0)}°
+                  </span>
+                </strong>
               </>
             )}
           </div>

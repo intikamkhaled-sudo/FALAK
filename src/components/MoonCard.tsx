@@ -40,37 +40,40 @@ export default function MoonCard({ moon }: Props) {
 
       <div className="moon-row">
         <span>{t("illumination")}</span>
-
-        <strong>{moon.illumination.toFixed(1)}%</strong>
+        <strong>
+          <span className="numeric-ltr">{moon.illumination.toFixed(1)}%</span>
+        </strong>
       </div>
 
       <div className="moon-row">
         <span>{t("age")}</span>
-
         <strong>
-          {(moon.age / 24).toFixed(1)} {t("days")}
+          <span className="numeric-ltr">{(moon.age / 24).toFixed(1)}</span>{" "}
+          {t("days")}
         </strong>
       </div>
 
       <div className="moon-row">
         <span>{t("phaseAngle")}</span>
-
-        <strong>{moon.phaseAngle.toFixed(1)}°</strong>
+        <strong>
+          <span className="numeric-ltr">{moon.phaseAngle.toFixed(1)}°</span>
+        </strong>
       </div>
 
       {moon.nextNewMoon && (
         <div className="moon-row">
           <span>{t("nextNewMoon")}</span>
-
           <strong>
-            {moon.nextNewMoon.toLocaleDateString(
-              language === "ar" ? "ar-EG" : "en-US",
-              {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              },
-            )}
+            <span className="numeric-inline">
+              {moon.nextNewMoon.toLocaleDateString(
+                language === "ar" ? "ar-EG" : "en-US",
+                {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                },
+              )}
+            </span>
           </strong>
         </div>
       )}

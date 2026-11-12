@@ -19,6 +19,14 @@ import HijriCard from "../components/HijriCard";
 import MoonCard from "../components/MoonCard";
 import CrescentCard from "../components/CrescentCard";
 import QiblaCard from "../components/QiblaCard";
+import CrescentWeatherCard from "../components/CrescentWeatherCard";
+
+import {
+  fetchWeather,
+  assessCrescentWeather,
+  type WeatherData,
+  type WeatherAssessment,
+} from "../services/weather";
 
 import type { PrayerVerseKey } from "../data/prayerVerses";
 
@@ -27,10 +35,8 @@ import { useLanguage } from "../context/LanguageContext";
 interface DashboardCity {
   name: string;
   nameAr?: string;
-
   country: string;
   countryAr?: string;
-
   latitude: number;
   longitude: number;
   elevation?: number;
@@ -40,6 +46,31 @@ interface PrayerCandidate {
   name: PrayerVerseKey;
   time: Date;
 }
+
+type WeatherState =
+  | {
+      status: "idle";
+      data: null;
+      error: null;
+    }
+  | {
+      status: "loading";
+      data: null;
+      error: null;
+    }
+  | {
+      status: "success";
+      data: {
+        weather: WeatherData;
+        assessment: WeatherAssessment;
+      };
+      error: null;
+    }
+  | {
+      status: "error";
+      data: null;
+      error: string;
+    };
 
 export default function Dashboard() {
   const { t, language } = useLanguage();
@@ -58,9 +89,14 @@ export default function Dashboard() {
     return cities[0];
   });
 
+  const [weatherState, setWeatherState] = useState<WeatherState>({
+    status: "idle",
+    data: null,
+    error: null,
+  });
+
   function changeCity(newCity: DashboardCity) {
     setCity(newCity);
-
     localStorage.setItem("falak-city", JSON.stringify(newCity));
   }
 
@@ -74,10 +110,90 @@ export default function Dashboard() {
   });
 
   /*
+   * Best crescent observation time.
+   * Rounded to one-minute precision.
+   */
+  const bestTimeMs = report.crescent.bestTime
+    ? Math.round(report.crescent.bestTime.getTime() / 60000) * 60000
+    : null;
+
+  /*
+   * Weather integration.
+   *
+   * Fetch weather at the best observation time.
+   * Assess weather independently from Yallop.
+   */
+  useEffect(() => {
+    if (bestTimeMs === null) {
+      setWeatherState({
+        status: "idle",
+        data: null,
+        error: null,
+      });
+      return;
+    }
+
+    const controller = new AbortController();
+
+    // Create Date only after confirming bestTimeMs is not null.
+    const observationTime = new Date(bestTimeMs);
+
+    setWeatherState({
+      status: "loading",
+      data: null,
+      error: null,
+    });
+
+    async function loadWeather() {
+      try {
+        const result = await fetchWeather(
+          {
+            latitude: city.latitude,
+            longitude: city.longitude,
+            elevation: city.elevation ?? 0,
+          },
+          observationTime,
+          controller.signal,
+        );
+
+        if (controller.signal.aborted) return;
+
+        // Calculate weather suitability assessment.
+        const assessment = assessCrescentWeather(result);
+
+        if (controller.signal.aborted) return;
+
+        setWeatherState({
+          status: "success",
+          data: {
+            weather: result,
+            assessment,
+          },
+          error: null,
+        });
+      } catch (error) {
+        if (controller.signal.aborted) return;
+
+        setWeatherState({
+          status: "error",
+          data: null,
+          error:
+            error instanceof Error ? error.message : "Weather request failed.",
+        });
+      }
+    }
+
+    loadWeather();
+
+    return () => {
+      controller.abort();
+    };
+  }, [city.latitude, city.longitude, city.elevation, bestTimeMs]);
+
+  /*
    * Schedule Falak prayer notifications.
    *
-   * The scheduler reads the notification
-   * preferences saved by the user.
+   * The scheduler reads saved notification preferences.
    */
   useEffect(() => {
     schedulePrayerNotifications(report.prayers, language);
@@ -95,10 +211,9 @@ export default function Dashboard() {
   ]);
 
   /*
-   * Immediately re-schedule whenever:
-   *
-   * - Notification permission is granted.
-   * - Falak notification settings change.
+   * Re-schedule notifications when:
+   * - Permission is granted.
+   * - Notification settings change.
    */
   useEffect(() => {
     function rescheduleNotifications() {
@@ -136,8 +251,8 @@ export default function Dashboard() {
   ]);
 
   /*
-   * Determine the next prayer for the
-   * Qur'anic reflection card.
+   * Determine the next prayer for
+   * the Qur'anic reflection card.
    */
   const nextPrayerName = useMemo<PrayerVerseKey>(() => {
     const prayers: PrayerCandidate[] = [
@@ -183,10 +298,12 @@ export default function Dashboard() {
   return (
     <FalakLayout>
       <main className="dashboard-layout">
+        {/* Hero */}
         <section className="top-section">
           <FalakHero city={city} hijri={report.hijri} moon={report.moon} />
         </section>
 
+        {/* Location */}
         <section className="location-section">
           <LocationSelector currentCity={city} onChange={changeCity} />
 
@@ -195,12 +312,9 @@ export default function Dashboard() {
               const gpsCity: DashboardCity = {
                 name: "Current Location",
                 nameAr: "موقعي الحالي",
-
                 country: "GPS",
                 countryAr: "تحديد الموقع",
-
                 ...location,
-
                 elevation: location.elevation ?? 0,
               };
 
@@ -209,14 +323,17 @@ export default function Dashboard() {
           />
         </section>
 
+        {/* Next Prayer */}
         <section className="next-section">
           <NextPrayer prayers={report.prayers} />
         </section>
 
+        {/* Quranic Reflection */}
         <section className="verse-section">
           <PrayerVerseCard nextPrayer={nextPrayerName} />
         </section>
 
+        {/* Prayer Times */}
         <h2 className="section-title">🕌 {t("prayerTimes")}</h2>
 
         <section className="prayers-grid">
@@ -231,6 +348,7 @@ export default function Dashboard() {
           <PrayerCard name={t("isha")} time={report.prayers.isha} />
         </section>
 
+        {/* Astronomical Information */}
         <section className="info-grid">
           <HijriCard hijri={report.hijri} />
 
@@ -238,6 +356,31 @@ export default function Dashboard() {
 
           <CrescentCard crescent={report.crescent} />
 
+          {/* Weather Loading */}
+          {weatherState.status === "loading" && (
+            <div className="crescent-card">
+              <h2>🌤️ Crescent Weather</h2>
+              <p>Loading weather data...</p>
+            </div>
+          )}
+
+          {/* Weather Success */}
+          {weatherState.status === "success" && (
+            <CrescentWeatherCard
+              weather={weatherState.data.weather}
+              assessment={weatherState.data.assessment}
+            />
+          )}
+
+          {/* Weather Error */}
+          {weatherState.status === "error" && (
+            <div className="crescent-card">
+              <h2>🌤️ Crescent Weather</h2>
+              <p>Weather data unavailable.</p>
+            </div>
+          )}
+
+          {/* Qibla */}
           <QiblaCard latitude={city.latitude} longitude={city.longitude} />
         </section>
       </main>
