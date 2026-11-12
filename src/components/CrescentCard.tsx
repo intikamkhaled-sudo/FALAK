@@ -56,25 +56,41 @@ export default function CrescentCard({ crescent }: Props) {
 
         <div className="crescent-item">
           <span>{t("altitude")}</span>
+<<<<<<< HEAD
           <strong><span className="numeric-ltr">{crescent.altitude.toFixed(2)}°</span></strong>
+=======
+          <strong>{crescent.altitude.toFixed(2)}°</strong>
+>>>>>>> origin/main
         </div>
 
         <div className="crescent-item">
           <span>{t("elongation")}</span>
+<<<<<<< HEAD
           <strong><span className="numeric-ltr">{crescent.elongation.toFixed(2)}°</span></strong>
+=======
+          <strong>{crescent.elongation.toFixed(2)}°</strong>
+>>>>>>> origin/main
         </div>
 
         <div className="crescent-item">
           <span>{t("moonsetLag")}</span>
           <strong>
+<<<<<<< HEAD
             <span className="numeric-ltr">{crescent.lagMinutes}</span> {t("minutes")}
+=======
+            {crescent.lagMinutes} {t("minutes")}
+>>>>>>> origin/main
           </strong>
         </div>
 
         <div className="crescent-item">
           <span>{t("moonAge")}</span>
           <strong>
+<<<<<<< HEAD
             <span className="numeric-ltr">{(crescent.moonAgeHours / 24).toFixed(1)}</span> {t("days")}
+=======
+            {(crescent.moonAgeHours / 24).toFixed(1)} {t("days")}
+>>>>>>> origin/main
           </strong>
         </div>
 

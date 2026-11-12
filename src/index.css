@@ -1787,6 +1787,7 @@ html[dir="ltr"] .falak-content {
     border-radius: 24px 24px 0 0;
   }
 }
+<<<<<<< HEAD
 
 
 /* Keep numeric values and units in their natural order inside RTL layouts. */
@@ -1803,3 +1804,5 @@ html[dir="ltr"] .falak-content {
   unicode-bidi: isolate;
   white-space: nowrap;
 }
+=======
+>>>>>>> origin/main

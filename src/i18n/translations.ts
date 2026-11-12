@@ -43,6 +43,7 @@ export const translations = {
     likely: "LIKELY",
     uncertain: "UNCERTAIN",
 
+<<<<<<< HEAD
     crescentWeather: "Crescent Weather",
     weatherAssessment: "Weather Assessment",
     weatherData: "Weather Data",
@@ -105,6 +106,8 @@ export const translations = {
     limitationNotObservation: "Weather forecasts are not equivalent to direct ground measurements or a live satellite image.",
     limitationMissing: "The score was not calculated because one or more required weather indicators are unavailable.",
     limitationCloudLayers: "Total cloud cover and altitude-layer percentages are correlated. They are combined into one cloud component (total 60%, low 25%, mid 10%, high 5%) so cloud coverage is not counted as four independent top-level factors. These operational weights are not a validated astronomical rule; the model does not provide cloud thickness or opacity.",
+=======
+>>>>>>> origin/main
     qibla: "Qibla",
     direction: "Direction",
     distanceToKaaba: "Distance to Kaaba",
@@ -164,6 +167,7 @@ export const translations = {
     likely: "مرجح",
     uncertain: "غير مؤكد",
 
+<<<<<<< HEAD
     crescentWeather: "طقس رصد الهلال",
     weatherAssessment: "تقييم الطقس",
     weatherData: "بيانات الطقس",
@@ -226,6 +230,8 @@ export const translations = {
     limitationNotObservation: "توقعات الطقس لا تعادل قياسات أرضية مباشرة أو صورة قمر صناعي لحظية.",
     limitationMissing: "لم تُحسب الدرجة لأن مؤشرًا واحدًا أو أكثر من مؤشرات الطقس المطلوبة غير متاح.",
     limitationCloudLayers: "الغطاء السحابي الكلي ونسب السحب حسب الارتفاع مؤشرات مترابطة. تُدمج في مكوّن سحابي واحد (الغطاء الكلي ٦٠٪، المنخفضة ٢٥٪، المتوسطة ١٠٪، المرتفعة ٥٪) حتى لا تُحسب السحب كأربعة عوامل مستقلة. هذه أوزان تشغيلية وليست قاعدة فلكية مثبتة، كما أن النموذج لا يوضح سماكة السحب أو شفافيتها.",
+=======
+>>>>>>> origin/main
     qibla: "القبلة",
     direction: "الاتجاه",
     distanceToKaaba: "المسافة إلى الكعبة",

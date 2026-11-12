@@ -197,7 +197,11 @@ export default function NextPrayer({ prayers }: Props) {
 
         <div className="next-name">🕌 {translatePrayer(nextPrayer.name)}</div>
 
+<<<<<<< HEAD
         <div className="next-time numeric-ltr">{formatTime(nextPrayer.time)}</div>
+=======
+        <div className="next-time">{formatTime(nextPrayer.time)}</div>
+>>>>>>> origin/main
 
         <div className="progress">
           <div
@@ -208,7 +212,11 @@ export default function NextPrayer({ prayers }: Props) {
           />
         </div>
 
+<<<<<<< HEAD
         <div className="countdown numeric-ltr">{getCountdown(nextPrayer.time)}</div>
+=======
+        <div className="countdown">{getCountdown(nextPrayer.time)}</div>
+>>>>>>> origin/main
 
         <div className="remaining-label">{t("remainingTime")}</div>
       </div>

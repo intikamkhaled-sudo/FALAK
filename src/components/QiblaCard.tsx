@@ -254,7 +254,11 @@ export default function QiblaCard({ latitude, longitude }: Props) {
         <div className="kaaba-center">🕋</div>
       </div>
 
+<<<<<<< HEAD
       <div className="qibla-degree numeric-ltr">{qiblaBearing.toFixed(1)}°</div>
+=======
+      <div className="qibla-degree">{qiblaBearing.toFixed(1)}°</div>
+>>>>>>> origin/main
 
       <div className="qibla-direction">{getDirectionName(qiblaBearing)}</div>
 
@@ -262,7 +266,11 @@ export default function QiblaCard({ latitude, longitude }: Props) {
         <div className="qibla-live-data">
           <div>
             🧭 {language === "ar" ? "اتجاه الجهاز" : "Device heading"}:{" "}
+<<<<<<< HEAD
             <strong><span className="numeric-ltr">{deviceHeading.toFixed(0)}°</span></strong>
+=======
+            <strong>{deviceHeading.toFixed(0)}°</strong>
+>>>>>>> origin/main
           </div>
 
           <div>
@@ -273,7 +281,11 @@ export default function QiblaCard({ latitude, longitude }: Props) {
             ) : (
               <>
                 {language === "ar" ? "الانحراف عن القبلة" : "Qibla offset"}:{" "}
+<<<<<<< HEAD
                 <strong><span className="numeric-ltr">{Math.abs(alignmentError ?? 0).toFixed(0)}°</span></strong>
+=======
+                <strong>{Math.abs(alignmentError ?? 0).toFixed(0)}°</strong>
+>>>>>>> origin/main
               </>
             )}
           </div>
