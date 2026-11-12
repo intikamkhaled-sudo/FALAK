@@ -19,7 +19,6 @@ import HijriCard from "../components/HijriCard";
 import MoonCard from "../components/MoonCard";
 import CrescentCard from "../components/CrescentCard";
 import QiblaCard from "../components/QiblaCard";
-<<<<<<< HEAD
 import CrescentWeatherCard from "../components/CrescentWeatherCard";
 
 import {
@@ -28,8 +27,6 @@ import {
   type WeatherData,
   type WeatherAssessment,
 } from "../services/weather";
-=======
->>>>>>> origin/main
 
 import type { PrayerVerseKey } from "../data/prayerVerses";
 
@@ -38,15 +35,8 @@ import { useLanguage } from "../context/LanguageContext";
 interface DashboardCity {
   name: string;
   nameAr?: string;
-<<<<<<< HEAD
   country: string;
   countryAr?: string;
-=======
-
-  country: string;
-  countryAr?: string;
-
->>>>>>> origin/main
   latitude: number;
   longitude: number;
   elevation?: number;
@@ -57,7 +47,6 @@ interface PrayerCandidate {
   time: Date;
 }
 
-<<<<<<< HEAD
 type WeatherState =
   | {
       status: "idle";
@@ -83,8 +72,6 @@ type WeatherState =
       error: string;
     };
 
-=======
->>>>>>> origin/main
 export default function Dashboard() {
   const { t, language } = useLanguage();
 
@@ -102,7 +89,6 @@ export default function Dashboard() {
     return cities[0];
   });
 
-<<<<<<< HEAD
   const [weatherState, setWeatherState] = useState<WeatherState>({
     status: "idle",
     data: null,
@@ -111,11 +97,6 @@ export default function Dashboard() {
 
   function changeCity(newCity: DashboardCity) {
     setCity(newCity);
-=======
-  function changeCity(newCity: DashboardCity) {
-    setCity(newCity);
-
->>>>>>> origin/main
     localStorage.setItem("falak-city", JSON.stringify(newCity));
   }
 
@@ -129,7 +110,6 @@ export default function Dashboard() {
   });
 
   /*
-<<<<<<< HEAD
    * Best crescent observation time.
    * Rounded to one-minute precision.
    */
@@ -214,12 +194,6 @@ export default function Dashboard() {
    * Schedule Falak prayer notifications.
    *
    * The scheduler reads saved notification preferences.
-=======
-   * Schedule Falak prayer notifications.
-   *
-   * The scheduler reads the notification
-   * preferences saved by the user.
->>>>>>> origin/main
    */
   useEffect(() => {
     schedulePrayerNotifications(report.prayers, language);
@@ -237,16 +211,9 @@ export default function Dashboard() {
   ]);
 
   /*
-<<<<<<< HEAD
    * Re-schedule notifications when:
    * - Permission is granted.
    * - Notification settings change.
-=======
-   * Immediately re-schedule whenever:
-   *
-   * - Notification permission is granted.
-   * - Falak notification settings change.
->>>>>>> origin/main
    */
   useEffect(() => {
     function rescheduleNotifications() {
@@ -284,13 +251,8 @@ export default function Dashboard() {
   ]);
 
   /*
-<<<<<<< HEAD
    * Determine the next prayer for
    * the Qur'anic reflection card.
-=======
-   * Determine the next prayer for the
-   * Qur'anic reflection card.
->>>>>>> origin/main
    */
   const nextPrayerName = useMemo<PrayerVerseKey>(() => {
     const prayers: PrayerCandidate[] = [
@@ -336,18 +298,12 @@ export default function Dashboard() {
   return (
     <FalakLayout>
       <main className="dashboard-layout">
-<<<<<<< HEAD
         {/* Hero */}
-=======
->>>>>>> origin/main
         <section className="top-section">
           <FalakHero city={city} hijri={report.hijri} moon={report.moon} />
         </section>
 
-<<<<<<< HEAD
         {/* Location */}
-=======
->>>>>>> origin/main
         <section className="location-section">
           <LocationSelector currentCity={city} onChange={changeCity} />
 
@@ -356,18 +312,9 @@ export default function Dashboard() {
               const gpsCity: DashboardCity = {
                 name: "Current Location",
                 nameAr: "موقعي الحالي",
-<<<<<<< HEAD
                 country: "GPS",
                 countryAr: "تحديد الموقع",
                 ...location,
-=======
-
-                country: "GPS",
-                countryAr: "تحديد الموقع",
-
-                ...location,
-
->>>>>>> origin/main
                 elevation: location.elevation ?? 0,
               };
 
@@ -376,26 +323,17 @@ export default function Dashboard() {
           />
         </section>
 
-<<<<<<< HEAD
         {/* Next Prayer */}
-=======
->>>>>>> origin/main
         <section className="next-section">
           <NextPrayer prayers={report.prayers} />
         </section>
 
-<<<<<<< HEAD
         {/* Quranic Reflection */}
-=======
->>>>>>> origin/main
         <section className="verse-section">
           <PrayerVerseCard nextPrayer={nextPrayerName} />
         </section>
 
-<<<<<<< HEAD
         {/* Prayer Times */}
-=======
->>>>>>> origin/main
         <h2 className="section-title">🕌 {t("prayerTimes")}</h2>
 
         <section className="prayers-grid">
@@ -410,10 +348,7 @@ export default function Dashboard() {
           <PrayerCard name={t("isha")} time={report.prayers.isha} />
         </section>
 
-<<<<<<< HEAD
         {/* Astronomical Information */}
-=======
->>>>>>> origin/main
         <section className="info-grid">
           <HijriCard hijri={report.hijri} />
 
@@ -421,7 +356,6 @@ export default function Dashboard() {
 
           <CrescentCard crescent={report.crescent} />
 
-<<<<<<< HEAD
           {/* Weather Loading */}
           {weatherState.status === "loading" && (
             <div className="crescent-card">
@@ -447,8 +381,6 @@ export default function Dashboard() {
           )}
 
           {/* Qibla */}
-=======
->>>>>>> origin/main
           <QiblaCard latitude={city.latitude} longitude={city.longitude} />
         </section>
       </main>

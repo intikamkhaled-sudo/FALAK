@@ -2,7 +2,6 @@ import { formatTime } from "../utils/timeFormat";
 
 interface Props {
   name: string;
-
   time: Date | null;
 }
 
@@ -11,11 +10,7 @@ export default function PrayerCard({ name, time }: Props) {
     <div className="prayer-mini-card">
       <span>🕌 {name}</span>
 
-<<<<<<< HEAD
       <strong className="numeric-ltr">{formatTime(time)}</strong>
-=======
-      <strong>{formatTime(time)}</strong>
->>>>>>> origin/main
     </div>
   );
 }

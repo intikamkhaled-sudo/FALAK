@@ -5,10 +5,7 @@
     "lib": ["ES2023"],
     "types": ["node"],
     "skipLibCheck": true,
-<<<<<<< HEAD
     "resolveJsonModule": true,
-=======
->>>>>>> origin/main
 
     /* Bundler mode */
     "module": "nodenext",

@@ -43,7 +43,6 @@ export const translations = {
     likely: "LIKELY",
     uncertain: "UNCERTAIN",
 
-<<<<<<< HEAD
     crescentWeather: "Crescent Weather",
     weatherAssessment: "Weather Assessment",
     weatherData: "Weather Data",
@@ -74,40 +73,56 @@ export const translations = {
     unavailable: "Unavailable",
     noWeatherData: "Weather data is unavailable.",
     weatherLoading: "Loading weather data...",
-    weatherSummaryFavorable: "Weather conditions appear relatively suitable for observation; field verification is still required.",
-    weatherSummaryMixed: "Observation conditions are mixed; clouds or visibility may affect viewing.",
-    weatherSummaryUnfavorable: "Weather conditions are generally unsuitable at this time.",
+    weatherSummaryFavorable:
+      "Weather conditions appear relatively suitable for observation; field verification is still required.",
+    weatherSummaryMixed:
+      "Observation conditions are mixed; clouds or visibility may affect viewing.",
+    weatherSummaryUnfavorable:
+      "Weather conditions are generally unsuitable at this time.",
     explanationCloudGood: "Cloud cover is relatively low.",
     explanationCloudCaution: "Clouds may obstruct part of the horizon.",
     explanationCloudBad: "Cloud cover is high; observation may be difficult.",
     explanationLowCloudGood: "Low clouds are limited.",
-    explanationLowCloudCaution: "Some low clouds may be present near the horizon.",
+    explanationLowCloudCaution:
+      "Some low clouds may be present near the horizon.",
     explanationLowCloudBad: "Dense low clouds may obscure the crescent.",
     explanationMidCloudGood: "Mid-level clouds are limited.",
-    explanationMidCloudCaution: "Mid-level clouds may reduce the crescent's contrast.",
-    explanationMidCloudBad: "Extensive mid-level clouds may affect observation.",
+    explanationMidCloudCaution:
+      "Mid-level clouds may reduce the crescent's contrast.",
+    explanationMidCloudBad:
+      "Extensive mid-level clouds may affect observation.",
     explanationHighCloudGood: "High clouds are limited.",
-    explanationHighCloudCaution: "High clouds may reduce contrast; their effect depends on thickness.",
-    explanationHighCloudBad: "High clouds are widespread and may reduce contrast; their effect depends on cloud type and thickness.",
+    explanationHighCloudCaution:
+      "High clouds may reduce contrast; their effect depends on thickness.",
+    explanationHighCloudBad:
+      "High clouds are widespread and may reduce contrast; their effect depends on cloud type and thickness.",
     explanationVisibilityGood: "Horizontal visibility is good.",
     explanationVisibilityCaution: "Visibility is moderate.",
     explanationVisibilityBad: "Visibility is poor.",
     explanationHumidityGood: "Humidity is not particularly high.",
     explanationHumidityCaution: "Humidity may increase haze near the horizon.",
-    explanationHumidityBad: "High humidity may increase the chance of fog or haze.",
+    explanationHumidityBad:
+      "High humidity may increase the chance of fog or haze.",
     explanationPrecipGood: "Precipitation probability is low.",
     explanationPrecipCaution: "There is some chance of precipitation.",
     explanationPrecipBad: "Precipitation probability is high.",
-    limitationHeuristic: "This score is an operational weather-suitability indicator, not a statistical probability of seeing the crescent.",
-    limitationForecast: "Open-Meteo data are numerical model forecasts, not direct observation of the sky at the observer's location.",
-    limitationSeparate: "Astronomical Yallop/Odeh results must remain separate and must not be changed by this weather score.",
-    limitationInsufficient: "There is not enough weather data to produce a reliable assessment.",
-    limitationNotProof: "A weather assessment does not prove that the crescent has been sighted.",
-    limitationNotObservation: "Weather forecasts are not equivalent to direct ground measurements or a live satellite image.",
-    limitationMissing: "The score was not calculated because one or more required weather indicators are unavailable.",
-    limitationCloudLayers: "Total cloud cover and altitude-layer percentages are correlated. They are combined into one cloud component (total 60%, low 25%, mid 10%, high 5%) so cloud coverage is not counted as four independent top-level factors. These operational weights are not a validated astronomical rule; the model does not provide cloud thickness or opacity.",
-=======
->>>>>>> origin/main
+    limitationHeuristic:
+      "This score is an operational weather-suitability indicator, not a statistical probability of seeing the crescent.",
+    limitationForecast:
+      "Open-Meteo data are numerical model forecasts, not direct observation of the sky at the observer's location.",
+    limitationSeparate:
+      "Astronomical Yallop/Odeh results must remain separate and must not be changed by this weather score.",
+    limitationInsufficient:
+      "There is not enough weather data to produce a reliable assessment.",
+    limitationNotProof:
+      "A weather assessment does not prove that the crescent has been sighted.",
+    limitationNotObservation:
+      "Weather forecasts are not equivalent to direct ground measurements or a live satellite image.",
+    limitationMissing:
+      "The score was not calculated because one or more required weather indicators are unavailable.",
+    limitationCloudLayers:
+      "Total cloud cover and altitude-layer percentages are correlated. They are combined into one cloud component (total 60%, low 25%, mid 10%, high 5%) so cloud coverage is not counted as four independent top-level factors. These operational weights are not a validated astronomical rule; the model does not provide cloud thickness or opacity.",
+
     qibla: "Qibla",
     direction: "Direction",
     distanceToKaaba: "Distance to Kaaba",
@@ -167,7 +182,6 @@ export const translations = {
     likely: "مرجح",
     uncertain: "غير مؤكد",
 
-<<<<<<< HEAD
     crescentWeather: "طقس رصد الهلال",
     weatherAssessment: "تقييم الطقس",
     weatherData: "بيانات الطقس",
@@ -198,9 +212,12 @@ export const translations = {
     unavailable: "غير متاح",
     noWeatherData: "بيانات الطقس غير متاحة.",
     weatherLoading: "جارٍ تحميل بيانات الطقس...",
-    weatherSummaryFavorable: "تبدو ظروف الطقس ملائمة نسبيًا للرصد، مع ضرورة التحقق الميداني.",
-    weatherSummaryMixed: "ظروف الرصد متوسطة؛ وقد تؤثر السحب أو مدى الرؤية على المشاهدة.",
-    weatherSummaryUnfavorable: "ظروف الطقس غير ملائمة غالبًا للرصد في هذا التوقيت.",
+    weatherSummaryFavorable:
+      "تبدو ظروف الطقس ملائمة نسبيًا للرصد، مع ضرورة التحقق الميداني.",
+    weatherSummaryMixed:
+      "ظروف الرصد متوسطة؛ وقد تؤثر السحب أو مدى الرؤية على المشاهدة.",
+    weatherSummaryUnfavorable:
+      "ظروف الطقس غير ملائمة غالبًا للرصد في هذا التوقيت.",
     explanationCloudGood: "الغطاء السحابي منخفض نسبيًا.",
     explanationCloudCaution: "قد تعيق السحب جزءًا من الأفق.",
     explanationCloudBad: "الغطاء السحابي مرتفع وقد يصعب الرصد.",
@@ -208,30 +225,39 @@ export const translations = {
     explanationLowCloudCaution: "قد توجد سحب منخفضة قرب الأفق.",
     explanationLowCloudBad: "قد تحجب السحب المنخفضة الكثيفة الهلال.",
     explanationMidCloudGood: "السحب المتوسطة محدودة.",
-    explanationMidCloudCaution: "قد تقلل السحب المتوسطة من وضوح الهلال وتباينه.",
+    explanationMidCloudCaution:
+      "قد تقلل السحب المتوسطة من وضوح الهلال وتباينه.",
     explanationMidCloudBad: "السحب المتوسطة الكثيفة قد تؤثر في الرصد.",
     explanationHighCloudGood: "السحب المرتفعة محدودة.",
-    explanationHighCloudCaution: "قد تقلل السحب المرتفعة التباين؛ ويعتمد تأثيرها على سماكتها.",
-    explanationHighCloudBad: "السحب المرتفعة منتشرة وقد تقلل التباين؛ ويعتمد تأثيرها على نوعها وسماكتها.",
+    explanationHighCloudCaution:
+      "قد تقلل السحب المرتفعة التباين؛ ويعتمد تأثيرها على سماكتها.",
+    explanationHighCloudBad:
+      "السحب المرتفعة منتشرة وقد تقلل التباين؛ ويعتمد تأثيرها على نوعها وسماكتها.",
     explanationVisibilityGood: "مدى الرؤية الأفقية جيد.",
     explanationVisibilityCaution: "مدى الرؤية متوسط.",
     explanationVisibilityBad: "مدى الرؤية ضعيف.",
     explanationHumidityGood: "الرطوبة ليست مرتفعة بشكل ملحوظ.",
     explanationHumidityCaution: "قد تزيد الرطوبة من العوالق قرب الأفق.",
-    explanationHumidityBad: "قد تزيد الرطوبة المرتفعة من احتمال الضباب أو العوالق.",
+    explanationHumidityBad:
+      "قد تزيد الرطوبة المرتفعة من احتمال الضباب أو العوالق.",
     explanationPrecipGood: "احتمال الهطول منخفض.",
     explanationPrecipCaution: "يوجد احتمال لهطول الأمطار.",
     explanationPrecipBad: "احتمال الهطول مرتفع.",
-    limitationHeuristic: "هذه الدرجة مؤشر تشغيلي لملاءمة الطقس، وليست احتمالًا إحصائيًا لرؤية الهلال.",
-    limitationForecast: "بيانات Open-Meteo توقعات ناتجة عن نماذج عددية، وليست رصدًا مباشرًا للسماء عند موقع الراصد.",
-    limitationSeparate: "يجب إبقاء نتائج Yallop/Odeh الفلكية مستقلة، وعدم تعديلها باستخدام درجة الطقس.",
+    limitationHeuristic:
+      "هذه الدرجة مؤشر تشغيلي لملاءمة الطقس، وليست احتمالًا إحصائيًا لرؤية الهلال.",
+    limitationForecast:
+      "بيانات Open-Meteo توقعات ناتجة عن نماذج عددية، وليست رصدًا مباشرًا للسماء عند موقع الراصد.",
+    limitationSeparate:
+      "يجب إبقاء نتائج Yallop/Odeh الفلكية مستقلة، وعدم تعديلها باستخدام درجة الطقس.",
     limitationInsufficient: "بيانات الطقس غير كافية لإصدار تقييم موثوق.",
     limitationNotProof: "تقييم الطقس لا يُثبت تحقق رؤية الهلال.",
-    limitationNotObservation: "توقعات الطقس لا تعادل قياسات أرضية مباشرة أو صورة قمر صناعي لحظية.",
-    limitationMissing: "لم تُحسب الدرجة لأن مؤشرًا واحدًا أو أكثر من مؤشرات الطقس المطلوبة غير متاح.",
-    limitationCloudLayers: "الغطاء السحابي الكلي ونسب السحب حسب الارتفاع مؤشرات مترابطة. تُدمج في مكوّن سحابي واحد (الغطاء الكلي ٦٠٪، المنخفضة ٢٥٪، المتوسطة ١٠٪، المرتفعة ٥٪) حتى لا تُحسب السحب كأربعة عوامل مستقلة. هذه أوزان تشغيلية وليست قاعدة فلكية مثبتة، كما أن النموذج لا يوضح سماكة السحب أو شفافيتها.",
-=======
->>>>>>> origin/main
+    limitationNotObservation:
+      "توقعات الطقس لا تعادل قياسات أرضية مباشرة أو صورة قمر صناعي لحظية.",
+    limitationMissing:
+      "لم تُحسب الدرجة لأن مؤشرًا واحدًا أو أكثر من مؤشرات الطقس المطلوبة غير متاح.",
+    limitationCloudLayers:
+      "الغطاء السحابي الكلي ونسب السحب حسب الارتفاع مؤشرات مترابطة. تُدمج في مكوّن سحابي واحد (الغطاء الكلي ٦٠٪، المنخفضة ٢٥٪، المتوسطة ١٠٪، المرتفعة ٥٪) حتى لا تُحسب السحب كأربعة عوامل مستقلة. هذه أوزان تشغيلية وليست قاعدة فلكية مثبتة، كما أن النموذج لا يوضح سماكة السحب أو شفافيتها.",
+
     qibla: "القبلة",
     direction: "الاتجاه",
     distanceToKaaba: "المسافة إلى الكعبة",

@@ -48,20 +48,13 @@ export default function HijriCard({ hijri }: Props) {
       <h2>📅 {t("hijriDate")}</h2>
 
       <div className="hijri-date-main">
-<<<<<<< HEAD
         <div className="hijri-day numeric-ltr">{day}</div>
-=======
-        <div className="hijri-day">{day}</div>
->>>>>>> origin/main
 
         <div className="hijri-month">{monthName}</div>
 
         <div className="hijri-year">
-<<<<<<< HEAD
-          <span className="numeric-ltr">{year}</span> {language === "ar" ? "هـ" : "AH"}
-=======
-          {year} {language === "ar" ? "هـ" : "AH"}
->>>>>>> origin/main
+          <span className="numeric-ltr">{year}</span>{" "}
+          {language === "ar" ? "هـ" : "AH"}
         </div>
       </div>
     </div>

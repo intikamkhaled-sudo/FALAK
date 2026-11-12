@@ -12,13 +12,10 @@ export default function CrescentCard({ crescent }: Props) {
     switch (value) {
       case "VISIBLE":
         return t("visible");
-
       case "POSSIBLE":
         return t("possible");
-
       case "NOT_VISIBLE":
         return t("notVisible");
-
       default:
         return value;
     }
@@ -28,13 +25,10 @@ export default function CrescentCard({ crescent }: Props) {
     switch (value) {
       case "CERTAIN":
         return t("certain");
-
       case "LIKELY":
         return t("likely");
-
       case "UNCERTAIN":
         return t("uncertain");
-
       default:
         return value;
     }
@@ -56,41 +50,35 @@ export default function CrescentCard({ crescent }: Props) {
 
         <div className="crescent-item">
           <span>{t("altitude")}</span>
-<<<<<<< HEAD
-          <strong><span className="numeric-ltr">{crescent.altitude.toFixed(2)}°</span></strong>
-=======
-          <strong>{crescent.altitude.toFixed(2)}°</strong>
->>>>>>> origin/main
+          <strong>
+            <span className="numeric-ltr">{crescent.altitude.toFixed(2)}°</span>
+          </strong>
         </div>
 
         <div className="crescent-item">
           <span>{t("elongation")}</span>
-<<<<<<< HEAD
-          <strong><span className="numeric-ltr">{crescent.elongation.toFixed(2)}°</span></strong>
-=======
-          <strong>{crescent.elongation.toFixed(2)}°</strong>
->>>>>>> origin/main
+          <strong>
+            <span className="numeric-ltr">
+              {crescent.elongation.toFixed(2)}°
+            </span>
+          </strong>
         </div>
 
         <div className="crescent-item">
           <span>{t("moonsetLag")}</span>
           <strong>
-<<<<<<< HEAD
-            <span className="numeric-ltr">{crescent.lagMinutes}</span> {t("minutes")}
-=======
-            {crescent.lagMinutes} {t("minutes")}
->>>>>>> origin/main
+            <span className="numeric-ltr">{crescent.lagMinutes}</span>{" "}
+            {t("minutes")}
           </strong>
         </div>
 
         <div className="crescent-item">
           <span>{t("moonAge")}</span>
           <strong>
-<<<<<<< HEAD
-            <span className="numeric-ltr">{(crescent.moonAgeHours / 24).toFixed(1)}</span> {t("days")}
-=======
-            {(crescent.moonAgeHours / 24).toFixed(1)} {t("days")}
->>>>>>> origin/main
+            <span className="numeric-ltr">
+              {(crescent.moonAgeHours / 24).toFixed(1)}
+            </span>{" "}
+            {t("days")}
           </strong>
         </div>
 
